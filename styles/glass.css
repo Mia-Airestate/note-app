@@ -1,0 +1,84 @@
+/* Glass Material Effect - Reusable */
+.glass-bg {
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border-light);
+}
+
+[data-theme='dark'] .glass-bg {
+  background: var(--glass-bg-dark);
+  border: 1px solid var(--glass-border-dark);
+}
+
+/* Shadow Classes */
+.shadow-small {
+  box-shadow: var(--shadow-small);
+}
+
+.shadow-medium {
+  box-shadow: var(--shadow-medium);
+}
+
+.shadow-big {
+  box-shadow: var(--shadow-big);
+}
+
+/* Glass Button - Standardized 1:1 */
+.glass-button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-small);
+  border: 1px solid var(--glass-border-light);
+  padding: 0;
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: var(--shadow-medium);
+}
+
+.glass-button:active {
+  transform: scale(0.95);
+  box-shadow: var(--shadow-small);
+}
+
+[data-theme='dark'] .glass-button {
+  background: var(--glass-bg-dark);
+  border: 1px solid var(--glass-border-dark);
+}
+
+[data-theme='dark'] .glass-button:hover {
+  background: rgba(26, 26, 26, 0.85);
+}
+
+/* Glass Card */
+.glass-card {
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border-light);
+  box-shadow: var(--shadow-small);
+  transition: all 0.2s ease;
+}
+
+.glass-card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-1px);
+}
+
+[data-theme='dark'] .glass-card {
+  background: var(--glass-bg-dark);
+  border: 1px solid var(--glass-border-dark);
+}

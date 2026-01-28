@@ -1,0 +1,50 @@
+.editor-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-view-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-view-empty-content {
+  text-align: center;
+  padding: var(--spacing-xl);
+}
+
+.editor-view-empty-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.editor-view-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+  padding-bottom: calc(var(--bottom-bar-height) + var(--spacing-lg));
+}
+
+.editor-view-placeholder {
+  padding: var(--spacing-xl);
+  text-align: center;
+  position: relative;
+}
+
+.editor-view-slash-hint {
+  position: absolute;
+  bottom: var(--spacing-md);
+  left: var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+.editor-view-blocks {
+  max-width: 800px;
+  margin: 0 auto;
+}
+

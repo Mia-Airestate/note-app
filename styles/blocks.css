@@ -1,0 +1,231 @@
+/* Block Base Styles */
+.block-container {
+  position: relative;
+  padding: var(--spacing-sm) 0;
+  min-height: 24px;
+}
+
+.block-container:hover .block-handle {
+  opacity: 1;
+}
+
+.block-handle {
+  position: absolute;
+  left: -24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.block-handle:active {
+  cursor: grabbing;
+}
+
+.block-handle::before {
+  content: '⋮⋮';
+  color: var(--color-text-tertiary);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.block-selected {
+  background-color: var(--color-selection-bg);
+}
+
+.block-focused {
+  outline: 2px solid var(--color-caret);
+  outline-offset: 2px;
+}
+
+/* Caret Animation */
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background-color: var(--color-caret);
+  animation: blink 1s infinite;
+  vertical-align: baseline;
+  margin-left: 1px;
+}
+
+/* Paragraph Block */
+.block-paragraph {
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  min-height: 24px;
+}
+
+/* Heading Blocks */
+.block-heading-1 {
+  font-size: var(--font-size-3xl);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: var(--spacing-lg) 0 var(--spacing-md);
+}
+
+.block-heading-2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: var(--spacing-lg) 0 var(--spacing-md);
+}
+
+.block-heading-3 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+}
+
+.block-heading-4 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+}
+
+.block-heading-5 {
+  font-size: var(--font-size);
+  font-weight: 600;
+  line-height: 1.4;
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+}
+
+.block-heading-6 {
+  font-size: var(--font-size);
+  font-weight: 600;
+  line-height: 1.4;
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Code Block */
+.block-code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas',
+    'source-code-pro', monospace;
+  font-size: var(--font-size-sm);
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.block-code-inline {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas',
+    'source-code-pro', monospace;
+  font-size: 0.9em;
+  background-color: var(--color-bg-secondary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+/* Quote Block */
+.block-quote {
+  border-left: 3px solid var(--color-border);
+  padding-left: var(--spacing-lg);
+  margin: var(--spacing-md) 0;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+/* List Block */
+.block-list {
+  margin: var(--spacing-sm) 0;
+  padding-left: var(--spacing-xl);
+}
+
+.block-list-item {
+  margin: var(--spacing-xs) 0;
+  list-style-type: disc;
+}
+
+.block-list-ordered {
+  list-style-type: decimal;
+}
+
+.block-list-checklist {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.block-list-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+}
+
+.block-list-checklist-item input[type='checkbox'] {
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+/* Image Block */
+.block-image {
+  margin: var(--spacing-lg) 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.block-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.block-image-caption {
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+/* Table Block */
+.block-table {
+  margin: var(--spacing-lg) 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.block-table th,
+.block-table td {
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+}
+
+.block-table th {
+  background-color: var(--color-bg-secondary);
+  font-weight: 600;
+}
+
+.block-table-header {
+  background-color: var(--color-selection-bg);
+}
+
+/* Divider Block */
+.block-divider {
+  margin: var(--spacing-xl) 0;
+  height: 1px;
+  background-color: var(--color-border);
+  border: none;
+}
+

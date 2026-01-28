@@ -1,0 +1,107 @@
+.app-window {
+  width: 90vw;
+  max-width: 1200px;
+  height: 85vh;
+  max-height: 800px;
+  background-color: var(--color-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-big);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.app-window-header {
+  height: 40px;
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-md);
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+[data-theme='dark'] .app-window-header {
+  background: var(--glass-bg-dark);
+}
+
+.app-window-controls {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.window-control {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.window-control-close {
+  background-color: #ff5f57;
+}
+
+.window-control-close:hover {
+  background-color: #ff3b30;
+}
+
+.window-control-minimize {
+  background-color: #ffbd2e;
+}
+
+.window-control-minimize:hover {
+  background-color: #ff9500;
+}
+
+.window-control-maximize {
+  background-color: #28c840;
+}
+
+.window-control-maximize:hover {
+  background-color: #34c759;
+}
+
+.app-window-title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  justify-content: center;
+}
+
+.app-window-icon {
+  font-size: 14px;
+}
+
+.app-window-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+
+.app-window-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+
+.app-window-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+

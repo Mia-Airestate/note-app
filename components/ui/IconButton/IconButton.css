@@ -1,0 +1,43 @@
+.icon-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  transition: all 0.2s ease;
+  border-radius: var(--radius-md);
+}
+
+.icon-btn:hover {
+  background-color: var(--color-hover);
+}
+
+.icon-btn:active {
+  background-color: var(--color-active);
+}
+
+.icon-btn-sm {
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+}
+
+.icon-btn-md {
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+}
+
+.icon-btn-lg {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+}
+
+.icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+

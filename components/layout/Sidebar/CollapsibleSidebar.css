@@ -1,0 +1,57 @@
+.collapsible-sidebar {
+  width: var(--sidebar-width);
+  height: 100%;
+  background-color: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.collapsible-sidebar.collapsed {
+  width: 48px;
+}
+
+.sidebar-header {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.sidebar-empty {
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+@media (max-width: 768px) {
+  .collapsible-sidebar {
+    width: 48px;
+  }
+
+  .collapsible-sidebar:not(.collapsed) {
+    position: absolute;
+    z-index: 1000;
+    height: 100%;
+    box-shadow: var(--shadow-medium);
+  }
+}

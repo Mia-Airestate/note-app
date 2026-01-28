@@ -1,0 +1,32 @@
+.block-list {
+  margin: var(--spacing-sm) 0;
+  padding-left: var(--spacing-xl);
+}
+
+.block-list-item {
+  margin: var(--spacing-xs) 0;
+  list-style-type: disc;
+}
+
+.block-list-ordered {
+  list-style-type: decimal;
+}
+
+.block-list-checklist {
+  list-style: none;
+  padding-left: 0;
+  margin: var(--spacing-sm) 0;
+}
+
+.block-list-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-xs) 0;
+}
+
+.block-list-checklist-item input[type='checkbox'] {
+  margin-top: 2px;
+  cursor: pointer;
+}
+

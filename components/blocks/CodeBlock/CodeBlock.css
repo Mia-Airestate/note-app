@@ -1,0 +1,30 @@
+.block-code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas',
+    'source-code-pro', monospace;
+  font-size: var(--font-size-sm);
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin: var(--spacing-md) 0;
+}
+
+.block-code-language {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-sm);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.block-code-content {
+  margin: 0;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.block-code-content code {
+  font-family: inherit;
+  font-size: inherit;
+}
+

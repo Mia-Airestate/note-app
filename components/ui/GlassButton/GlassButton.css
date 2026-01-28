@@ -1,0 +1,52 @@
+.glass-button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-small);
+  border: 1px solid var(--glass-border-light);
+  padding: 0;
+  color: var(--color-text);
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: var(--shadow-medium);
+}
+
+.glass-button:active {
+  transform: scale(0.95);
+  box-shadow: var(--shadow-small);
+}
+
+.glass-button-active {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--color-selection);
+}
+
+.glass-button-primary {
+  background-color: var(--color-selection);
+  color: white;
+}
+
+.glass-button-primary:hover {
+  opacity: 0.9;
+}
+
+[data-theme='dark'] .glass-button {
+  background: var(--glass-bg-dark);
+  border: 1px solid var(--glass-border-dark);
+}
+
+[data-theme='dark'] .glass-button:hover {
+  background: rgba(26, 26, 26, 0.85);
+}
+

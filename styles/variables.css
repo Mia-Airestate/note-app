@@ -1,0 +1,65 @@
+:root {
+  /* Colors - Light Mode */
+  --color-bg: #ffffff;
+  --color-bg-secondary: #f5f5f5;
+  --color-text: #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-border: rgba(126, 126, 126, 0.2);
+  --color-selection: #3b82f6;
+  --color-selection-bg: rgba(59, 130, 246, 0.1);
+  --color-caret: #3b82f6;
+  --color-hover: rgba(126, 126, 126, 0.1);
+  --color-active: rgba(126, 126, 126, 0.15);
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+
+  /* Border Radius */
+  --radius-sm: 5px;
+  --radius-md: 10px;
+  --radius-lg: 15px;
+
+  /* Typography */
+  --font-size: 14px;
+  --font-size-sm: 12px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 32px;
+  --line-height: 1.5;
+  --font-weight: 400;
+  --font-weight-medium: 500;
+
+  /* Layout */
+  --sidebar-width: 280px;
+  --bottom-bar-height: 60px;
+
+  /* Shadows */
+  --shadow-small: 0 0px 1px rgba(119, 119, 119, 0.214);
+  --shadow-medium: 0 2px 10px rgba(113, 113, 113, 0.2);
+  --shadow-big: 2px 2px 10px rgba(195, 0, 163, 0.2);
+
+  /* Glass Background */
+  --glass-bg-light: rgba(255, 255, 255, 0.7);
+  --glass-bg-dark: rgba(26, 26, 26, 0.7);
+  --glass-border-light: rgba(126, 126, 126, 0.11);
+  --glass-border-dark: rgba(126, 126, 126, 0.2);
+}
+
+[data-theme='dark'] {
+  --color-bg: #1a1a1a;
+  --color-bg-secondary: #2a2a2a;
+  --color-text: #ffffff;
+  --color-text-secondary: #b3b3b3;
+  --color-text-tertiary: #808080;
+  --color-border: rgba(126, 126, 126, 0.3);
+  --color-hover: rgba(126, 126, 126, 0.15);
+  --color-active: rgba(126, 126, 126, 0.25);
+}
+

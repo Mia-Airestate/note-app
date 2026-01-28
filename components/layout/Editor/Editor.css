@@ -1,0 +1,64 @@
+.editor {
+  flex: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--color-bg);
+}
+
+.editor-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-empty-content {
+  text-align: center;
+  max-width: 400px;
+  padding: var(--spacing-xl);
+}
+
+.editor-empty-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.editor-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.editor-title-input {
+  width: 100%;
+  border: none;
+  background: none;
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--color-text);
+  outline: none;
+  padding: 0;
+}
+
+.editor-title-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.editor-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+  padding-bottom: calc(var(--bottom-bar-height) + var(--spacing-lg));
+}
+
+.editor-placeholder {
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.editor-blocks {
+  max-width: 800px;
+  margin: 0 auto;
+}
+

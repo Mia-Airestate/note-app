@@ -1,0 +1,7 @@
+.block-divider {
+  margin: var(--spacing-xl) 0;
+  height: 1px;
+  background-color: var(--color-border);
+  border: none;
+}
+
