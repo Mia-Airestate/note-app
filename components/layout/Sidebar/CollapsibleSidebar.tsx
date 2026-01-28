@@ -1,92 +1,104 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePageStore } from '@/stores/pageStore';
 import { useNavigationStore } from '@/stores/navigationStore';
-import { GlassButton } from '@/components/ui/GlassButton/GlassButton';
-import { FiChevronLeft, FiChevronRight, FiList, FiPlus } from 'react-icons/fi';
+import { groupPagesByDate } from '@/utils/dateGrouping';
 import { NoteItem } from './NoteItem';
 import './CollapsibleSidebar.css';
 
-export function CollapsibleSidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+interface CollapsibleSidebarProps {
+  isCollapsed: boolean;
+  onToggle: () => void;
+}
+
+export function CollapsibleSidebar({ isCollapsed, onToggle }: CollapsibleSidebarProps) {
   const pages = usePageStore((state) => state.pages);
   const activePageId = usePageStore((state) => state.activePageId);
-  const createPage = usePageStore((state) => state.createPage);
-  const setActivePage = usePageStore((state) => state.setActivePage);
   const setView = useNavigationStore((state) => state.setView);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
+  // Swipe gesture for mobile
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsCollapsed(true);
+    if (!isMobile || !sidebarRef.current) return;
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.changedTouches[0].screenX;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    };
+
+    const handleSwipe = () => {
+      const swipeThreshold = 50;
+      const swipeDistance = touchStartX - touchEndX;
+
+      // Swipe right (left to right) - go back / close sidebar
+      if (swipeDistance < -swipeThreshold && isCollapsed) {
+        onToggle();
+      }
+      // Swipe left (right to left) - close sidebar
+      else if (swipeDistance > swipeThreshold && !isCollapsed) {
+        onToggle();
       }
     };
 
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    const element = sidebarRef.current;
+    element.addEventListener('touchstart', handleTouchStart);
+    element.addEventListener('touchend', handleTouchEnd);
 
-  const handleToggle = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
-  const handleShowAll = () => {
-    setView('list');
-  };
+    return () => {
+      element.removeEventListener('touchstart', handleTouchStart);
+      element.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isMobile, isCollapsed, onToggle]);
 
   const handleNoteClick = (noteId: string) => {
     setView('editor', noteId);
+    if (isMobile) {
+      onToggle(); // Close sidebar on mobile after navigation
+    }
   };
 
-  const handleNewPage = () => {
-    const newPage = createPage();
-    setView('editor', newPage.id);
-  };
+  const groupedPages = groupPagesByDate(pages);
 
   return (
-    <div className={isCollapsed ? 'collapsible-sidebar collapsed' : 'collapsible-sidebar'}>
-      <div className="sidebar-header">
-        {!isCollapsed && (
-          <GlassButton
-            icon={FiPlus}
-            onClick={handleNewPage}
-            ariaLabel="New note"
-          />
-        )}
-        <GlassButton
-          icon={isCollapsed ? FiChevronRight : FiChevronLeft}
-          onClick={handleToggle}
-          ariaLabel="Toggle sidebar"
-        />
-      </div>
+    <div 
+      ref={sidebarRef}
+      className={isCollapsed ? 'collapsible-sidebar collapsed' : 'collapsible-sidebar'}
+    >
       {!isCollapsed && (
-        <>
-          <div className="sidebar-content">
-            <GlassButton
-              icon={FiList}
-              onClick={handleShowAll}
-              ariaLabel="Show all notes"
-            />
-            {pages.length === 0 ? (
-              <div className="sidebar-empty">
-                <p className="text-secondary">No notes yet</p>
-              </div>
-            ) : (
-              <div className="sidebar-list">
-                {pages.map((page) => (
-                  <NoteItem
-                    key={page.id}
-                    page={page}
-                    isActive={page.id === activePageId}
-                    onClick={() => handleNoteClick(page.id)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </>
+        <div className="sidebar-content">
+          {pages.length === 0 ? (
+            <div className="sidebar-empty">
+              <p className="text-secondary">No notes yet</p>
+            </div>
+          ) : (
+            <div className="sidebar-groups">
+              {groupedPages.map((group) => (
+                <div key={group.label} className="sidebar-group">
+                  <h2 className="sidebar-group-title">{group.label}</h2>
+                  <div className="sidebar-list">
+                    {group.pages.map((page) => (
+                      <NoteItem
+                        key={page.id}
+                        page={page}
+                        isActive={page.id === activePageId}
+                        onClick={() => handleNoteClick(page.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

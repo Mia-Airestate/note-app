@@ -35,6 +35,7 @@
   display: flex;
   gap: var(--spacing-xs);
   align-items: center;
+  padding-right: var(--spacing-sm);
 }
 
 .window-control {
@@ -111,5 +112,20 @@
 
 [data-theme='dark'] .app-window-main {
   background: rgba(26, 26, 26, 0.1);
+}
+
+@media (max-width: 768px) {
+  .app-window-content {
+    position: relative;
+  }
+
+  .app-window-main {
+    width: 100%;
+  }
+
+  /* Hide sidebar toggle button on mobile */
+  .app-window-controls .glass-button[aria-label="Toggle sidebar"] {
+    display: none;
+  }
 }
 
