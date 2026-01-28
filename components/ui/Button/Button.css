@@ -3,8 +3,8 @@
   height: 32px;
   border: none;
   background: var(--glass-bg-light);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: var(--glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
   cursor: pointer;
   font-size: var(--font-size);
   font-weight: var(--font-weight);

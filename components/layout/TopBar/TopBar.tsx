@@ -44,7 +44,6 @@ export function TopBar() {
       <div className="top-bar-left">
         <GlassButton
           icon={FiChevronLeft}
-          iconSize={24}
           onClick={goBack}
           ariaLabel="Back"
         />
@@ -55,19 +54,16 @@ export function TopBar() {
       <div className="top-bar-right">
         <GlassButton
           icon={FiShare2}
-          iconSize={20}
           onClick={handleShare}
           ariaLabel="Share"
         />
         <GlassButton
           icon={FiMoreHorizontal}
-          iconSize={20}
           onClick={handleMore}
           ariaLabel="More options"
         />
         <GlassButton
           icon={FiCheck}
-          iconSize={20}
           onClick={handleDone}
           variant="primary"
           ariaLabel="Done"

@@ -18,4 +18,11 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-xl);
+  background: var(--glass-bg-light);
+  backdrop-filter: var(--glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
+}
+
+[data-theme='dark'] .desktop-container {
+  background: var(--glass-bg-dark);
 }

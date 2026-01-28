@@ -51,14 +51,12 @@ export function CollapsibleSidebar() {
         {!isCollapsed && (
           <GlassButton
             icon={FiPlus}
-            iconSize={18}
             onClick={handleNewPage}
             ariaLabel="New note"
           />
         )}
         <GlassButton
           icon={isCollapsed ? FiChevronRight : FiChevronLeft}
-          iconSize={20}
           onClick={handleToggle}
           ariaLabel="Toggle sidebar"
         />
@@ -68,7 +66,6 @@ export function CollapsibleSidebar() {
           <div className="sidebar-content">
             <GlassButton
               icon={FiList}
-              iconSize={18}
               onClick={handleShowAll}
               ariaLabel="Show all notes"
             />

@@ -1,8 +1,8 @@
 /* Glass Material Effect - Reusable */
 .glass-bg {
   background: var(--glass-bg-light);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: var(--glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
   border: 1px solid var(--glass-border-light);
 }
 
@@ -30,8 +30,8 @@
   height: 32px;
   border: none;
   background: var(--glass-bg-light);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: var(--glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -65,8 +65,8 @@
 /* Glass Card */
 .glass-card {
   background: var(--glass-bg-light);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: var(--glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
   border-radius: var(--radius-lg);
   border: 1px solid var(--glass-border-light);
   box-shadow: var(--shadow-small);

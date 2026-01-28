@@ -1,7 +1,6 @@
 .collapsible-sidebar {
   width: var(--sidebar-width);
   height: 100%;
-  background-color: var(--color-bg-secondary);
   border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
@@ -21,6 +20,11 @@
   justify-content: flex-end;
   gap: var(--spacing-sm);
   flex-shrink: 0;
+}
+
+.collapsible-sidebar.collapsed .sidebar-header {
+  padding: var(--spacing-md) var(--spacing-xs);
+  justify-content: center;
 }
 
 .sidebar-content {

@@ -25,10 +25,7 @@ export function AppWindow({ children, title = 'Life note' }: AppWindowProps) {
           <Icon icon={FiFileText} size={14} className="app-window-icon" />
           <span>{title}</span>
         </div>
-        <div className="app-window-actions">
-          <GlassButton icon={FiSettings} iconSize={16} ariaLabel="Settings" />
-          <GlassButton icon={FiShare2} iconSize={16} ariaLabel="Share" />
-        </div>
+        <GlassButton icon={FiSettings} ariaLabel="Settings" />
       </div>
       <div className="app-window-content">
         <CollapsibleSidebar />

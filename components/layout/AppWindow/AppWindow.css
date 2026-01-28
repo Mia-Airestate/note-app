@@ -3,7 +3,7 @@
   max-width: 1200px;
   height: 85vh;
   max-height: 800px;
-  background-color: var(--color-bg);
+  background-color: var(--color-bg-transparent);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-big);
   display: flex;
@@ -11,13 +11,14 @@
   overflow: hidden;
   position: relative;
   z-index: 1;
+
 }
 
 .app-window-header {
   height: 40px;
   background: var(--glass-bg-light);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: var(--glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
   border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
@@ -103,5 +104,12 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+[data-theme='dark'] .app-window-main {
+  background: rgba(26, 26, 26, 0.1);
 }
 

@@ -38,7 +38,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
         {title && (
           <div className="modal-header">
             <h2 className="modal-title">{title}</h2>
-            <GlassButton icon={FiX} iconSize={18} onClick={onClose} ariaLabel="Close" />
+            <GlassButton icon={FiX} onClick={onClose} ariaLabel="Close" />
           </div>
         )}
         <div className="modal-body">{children}</div>

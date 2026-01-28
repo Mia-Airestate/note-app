@@ -6,14 +6,12 @@ import './GlassButton.css';
 interface GlassButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   icon: IconType;
-  iconSize?: number;
   variant?: 'default' | 'active' | 'primary';
   ariaLabel?: string;
 }
 
 export function GlassButton({
   icon,
-  iconSize = 18,
   variant = 'default',
   className,
   ariaLabel,
@@ -25,7 +23,7 @@ export function GlassButton({
       aria-label={ariaLabel}
       {...props}
     >
-      <Icon icon={icon} size={iconSize} />
+      <Icon icon={icon} size={16} />
     </button>
   );
 }

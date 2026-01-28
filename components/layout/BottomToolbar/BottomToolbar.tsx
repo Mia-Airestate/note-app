@@ -60,10 +60,9 @@ export function BottomToolbar({ onSearchChange }: BottomToolbarProps) {
             onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
-        <GlassButton icon={FiMic} iconSize={20} onClick={handleMic} ariaLabel="Voice input" />
+        <GlassButton icon={FiMic} onClick={handleMic} ariaLabel="Voice input" />
         <GlassButton
           icon={HiOutlinePencil}
-          iconSize={20}
           variant="primary"
           onClick={handleNewNote}
           ariaLabel="New note"
@@ -74,13 +73,13 @@ export function BottomToolbar({ onSearchChange }: BottomToolbarProps) {
 
   return (
     <div className="bottom-toolbar bottom-toolbar-editor">
-      <GlassButton icon={FiBold} iconSize={20} variant="active" ariaLabel="Bold" />
-      <GlassButton icon={FiItalic} iconSize={20} ariaLabel="Italic" />
-      <GlassButton icon={FiUnderline} iconSize={20} ariaLabel="Underline" />
-      <GlassButton icon={TbStrikethrough} iconSize={20} ariaLabel="Strikethrough" />
-      <GlassButton icon={MdHighlight} iconSize={20} ariaLabel="Highlight" />
-      <GlassButton icon={FiLink} iconSize={20} ariaLabel="Link" />
-      <GlassButton icon={FiMoreHorizontal} iconSize={20} ariaLabel="More options" />
+      <GlassButton icon={FiBold} variant="active" ariaLabel="Bold" />
+      <GlassButton icon={FiItalic} ariaLabel="Italic" />
+      <GlassButton icon={FiUnderline} ariaLabel="Underline" />
+      <GlassButton icon={TbStrikethrough} ariaLabel="Strikethrough" />
+      <GlassButton icon={MdHighlight} ariaLabel="Highlight" />
+      <GlassButton icon={FiLink} ariaLabel="Link" />
+      <GlassButton icon={FiMoreHorizontal} ariaLabel="More options" />
     </div>
   );
 }
