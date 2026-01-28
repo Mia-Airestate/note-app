@@ -6,7 +6,7 @@ import './GlassButton.css';
 interface GlassButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   icon: IconType;
-  variant?: 'default' | 'active' | 'primary';
+  variant?: 'default' | 'active' | 'primary' | 'danger' | 'yellow' | 'unstyled';
   ariaLabel?: string;
 }
 

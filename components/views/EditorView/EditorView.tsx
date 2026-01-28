@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePageStore } from '@/stores/pageStore';
 import { useEditorStore } from '@/stores/editorStore';
 import { useNavigationStore } from '@/stores/navigationStore';
@@ -13,22 +13,41 @@ export function EditorView() {
   const updatePage = usePageStore((state) => state.updatePage);
   const blocks = useEditorStore((state) => state.blocks);
   const setBlocks = useEditorStore((state) => state.setBlocks);
-
-  const activePage = selectedNoteId ? getActivePage() : null;
+  const previousBlocksRef = useRef<string>('');
+  const isInitialLoadRef = useRef(true);
 
   useEffect(() => {
+    const activePage = selectedNoteId ? getActivePage() : null;
     if (activePage) {
-      setBlocks(activePage.blocks);
+      const blocksJson = JSON.stringify(activePage.blocks);
+      // Only update if blocks actually changed
+      if (blocksJson !== previousBlocksRef.current) {
+        setBlocks(activePage.blocks);
+        previousBlocksRef.current = blocksJson;
+        isInitialLoadRef.current = true;
+      }
     } else {
       setBlocks([]);
+      previousBlocksRef.current = '';
+      isInitialLoadRef.current = true;
     }
-  }, [activePage, setBlocks]);
+  }, [selectedNoteId, getActivePage, setBlocks]);
 
   useEffect(() => {
-    if (activePage && blocks.length > 0) {
-      updatePage(activePage.id, { blocks });
+    const activePage = selectedNoteId ? getActivePage() : null;
+    if (activePage && blocks.length > 0 && !isInitialLoadRef.current) {
+      const blocksJson = JSON.stringify(blocks);
+      // Only update if blocks actually changed
+      if (blocksJson !== previousBlocksRef.current) {
+        updatePage(activePage.id, { blocks });
+        previousBlocksRef.current = blocksJson;
+      }
+    } else if (isInitialLoadRef.current) {
+      isInitialLoadRef.current = false;
     }
-  }, [blocks, activePage, updatePage]);
+  }, [blocks, selectedNoteId, getActivePage, updatePage]);
+
+  const activePage = selectedNoteId ? getActivePage() : null;
 
   if (!activePage) {
     return (

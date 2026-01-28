@@ -3,7 +3,6 @@
   bottom: var(--spacing-lg);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--glass-bg-light);
   backdrop-filter: var(--glass-backdrop-filter);
   -webkit-backdrop-filter: var(--glass-backdrop-filter);
   border-radius: 30px;

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigationStore } from '@/stores/navigationStore';
+import { usePageStore } from '@/stores/pageStore';
 import { AppWindow } from '@/components/layout/AppWindow/AppWindow';
 import { TopBar } from '@/components/layout/TopBar/TopBar';
 import { ListView } from '@/components/views/ListView/ListView';
@@ -16,12 +17,18 @@ export default function Home() {
   const modalOpen = useUIStore((state) => state.modalOpen);
   const modalContent = useUIStore((state) => state.modalContent);
   const closeModal = useUIStore((state) => state.closeModal);
+  const loadPagesFromStorage = usePageStore((state) => state.loadPagesFromStorage);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    // Load pages from IndexedDB on mount
+    loadPagesFromStorage();
+  }, [loadPagesFromStorage]);
 
   return (
     <div className="desktop-background">
       <div className="desktop-container">
-        <AppWindow>
+        <AppWindow searchQuery={searchQuery}>
           <TopBar />
           {currentView === 'list' ? (
             <ListView searchQuery={searchQuery} />

@@ -16,11 +16,11 @@
 
 .app-window-header {
   height: 40px;
-  background: var(--glass-bg-light);
   backdrop-filter: var(--glass-backdrop-filter);
   -webkit-backdrop-filter: var(--glass-backdrop-filter);
   border-bottom: 1px solid var(--color-border);
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   padding: 0 var(--spacing-md);
   gap: var(--spacing-md);
@@ -29,6 +29,13 @@
 
 [data-theme='dark'] .app-window-header {
   background: var(--glass-bg-dark);
+}
+
+.app-window-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
 }
 
 .app-window-controls {

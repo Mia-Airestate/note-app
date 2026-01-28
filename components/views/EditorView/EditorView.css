@@ -3,6 +3,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--glass-white);
+
 }
 
 .editor-view-empty {

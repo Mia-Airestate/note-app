@@ -74,12 +74,12 @@ export function BottomToolbar({ onSearchChange }: BottomToolbarProps) {
   return (
     <div className="bottom-toolbar bottom-toolbar-editor">
       <GlassButton icon={FiBold} variant="active" ariaLabel="Bold" />
-      <GlassButton icon={FiItalic} ariaLabel="Italic" />
-      <GlassButton icon={FiUnderline} ariaLabel="Underline" />
-      <GlassButton icon={TbStrikethrough} ariaLabel="Strikethrough" />
-      <GlassButton icon={MdHighlight} ariaLabel="Highlight" />
-      <GlassButton icon={FiLink} ariaLabel="Link" />
-      <GlassButton icon={FiMoreHorizontal} ariaLabel="More options" />
+      <GlassButton icon={FiItalic} variant="unstyled" ariaLabel="Italic" />
+      <GlassButton icon={FiUnderline} variant="unstyled" ariaLabel="Underline" />
+      <GlassButton icon={TbStrikethrough} variant="unstyled" ariaLabel="Strikethrough" />
+      <GlassButton icon={MdHighlight} variant="unstyled" ariaLabel="Highlight" />
+      <GlassButton icon={FiLink} variant="unstyled" ariaLabel="Link" />
+      <GlassButton icon={FiMoreHorizontal} variant="unstyled" ariaLabel="More options" />
     </div>
   );
 }

@@ -241,3 +241,13 @@
   user-select: all;
 }
 
+/* Search Highlight - Shadow Text Effect */
+.search-highlight {
+  color: var(--color-text);
+  text-shadow: 
+    0 0 8px rgba(255, 235, 59, 0.8),
+    0 0 4px rgba(255, 235, 59, 0.6),
+    0 0 2px rgba(255, 235, 59, 0.4);
+  font-weight: 500;
+}
+
