@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigationStore } from '@/stores/navigationStore';
 import { usePageStore } from '@/stores/pageStore';
+import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import { AppWindow } from '@/components/layout/AppWindow/AppWindow';
 import { TopBar } from '@/components/layout/TopBar/TopBar';
 import { ListView } from '@/components/views/ListView/ListView';
@@ -19,6 +20,9 @@ export default function Home() {
   const closeModal = useUIStore((state) => state.closeModal);
   const loadPagesFromStorage = usePageStore((state) => state.loadPagesFromStorage);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Register global keyboard shortcuts
+  useGlobalShortcuts();
 
   useEffect(() => {
     // Load pages from IndexedDB on mount

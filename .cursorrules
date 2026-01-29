@@ -1,0 +1,79 @@
+# Cursor Rules - Ralph Loop Manual Execution
+
+You are an autonomous coding agent working on the LifeNote project. Follow the Ralph Loop pattern for each session.
+
+## Start of Every Session
+
+1. **Read the PRD**: Check `prd.json` for user stories and their status
+2. **Read Progress**: Check `progress.txt` for codebase patterns and previous learnings
+3. **Read Agent Instructions**: Check `AGENTS.md` for project-specific patterns and gotchas
+
+## Your Task (Ralph Loop)
+
+1. **Pick the next story**: Find the highest priority user story where `passes: false`
+2. **Implement that single story**: Follow the acceptance criteria exactly
+3. **Run quality checks**: Ensure typecheck passes (`npm run build`)
+4. **Update prd.json**: Set `passes: true` for the completed story, add notes
+5. **Append to progress.txt**: Document what was implemented, files changed, and learnings
+
+## Progress Report Format
+
+APPEND to progress.txt (never replace existing content):
+
+```
+## [Date] - [Story ID] [Story Title]
+- What was implemented: [brief description]
+- Files changed:
+  - [file path] ([what changed])
+- **Learnings for future iterations:**
+  - [Pattern discovered]
+  - [Gotcha encountered]
+  - [Useful context]
+---
+```
+
+## Codebase Patterns (Always Follow)
+
+Before implementing, read the `## Codebase Patterns` section at the top of `progress.txt`. Key patterns:
+
+- **DRY**: Extract reusable functions to `utils/`, hooks to `hooks/`
+- **Single Responsibility**: Each file serves ONE purpose
+- **State**: Use Zustand stores in `stores/`
+- **Styling**: Use CSS variables from `styles/variables.css`
+- **Keyboard Shortcuts**: Use `useKeyboardShortcuts` hook, never raw event listeners
+- **Storage**: Use IndexedDB via `utils/storage.ts`
+
+## Quality Requirements
+
+- ALL changes must pass typecheck (`npm run build`)
+- Do NOT break existing functionality
+- Keep changes focused and minimal
+- Follow existing code patterns in the codebase
+
+## Important Gotchas
+
+1. **Maximum update depth exceeded**: Check useEffect dependencies
+2. **Stale closure**: Use useRef to track current values in event handlers
+3. **Browser shortcuts conflict**: Use `{ capture: true }` in event listeners
+4. **Mobile sidebar**: Hide completely, don't just collapse
+5. **Group titles**: Never use `.toUpperCase()` (user preference)
+6. **Colored button hover**: Only change opacity, not background
+
+## User Preferences
+
+- Apple-inspired glass morphism design
+- No uppercase anywhere
+
+## Stop Condition
+
+After completing a user story:
+- If ALL stories have `passes: true` → Report "All stories complete!"
+- If stories remain with `passes: false` → Report which story to tackle next session
+
+## Session Start Prompt
+
+When user starts a new session, begin by:
+1. Reading `prd.json` to find next incomplete story
+2. Announcing: "Next story: [US-XXX] [Title]"
+3. Asking if user wants to proceed or work on something else
+

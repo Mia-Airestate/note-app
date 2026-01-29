@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { usePageStore } from '@/stores/pageStore';
 import { useEditorStore } from '@/stores/editorStore';
 import { useNavigationStore } from '@/stores/navigationStore';
+import { useEditorShortcuts } from '@/hooks/useEditorShortcuts';
 import { BlockWrapper } from '@/components/blocks/BlockWrapper';
 import './EditorView.css';
 
@@ -15,6 +16,9 @@ export function EditorView() {
   const setBlocks = useEditorStore((state) => state.setBlocks);
   const previousBlocksRef = useRef<string>('');
   const isInitialLoadRef = useRef(true);
+
+  // Register editor-specific keyboard shortcuts
+  useEditorShortcuts();
 
   useEffect(() => {
     const activePage = selectedNoteId ? getActivePage() : null;

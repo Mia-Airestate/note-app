@@ -1,0 +1,181 @@
+## Codebase Patterns
+
+### Code Structure
+- Follow DRY principle: Extract reusable functions to utils/, hooks to hooks/
+- Single responsibility: Each file serves one purpose
+- Pure functions for business logic in utils/ (not hooks)
+- React hooks only in hooks/ directory or components
+
+### State Management
+- Use Zustand stores in stores/ directory
+- Store names: pageStore, editorStore, navigationStore, uiStore
+- Access store state with selectors: `useStore((state) => state.property)`
+
+### Styling
+- Glass morphism: Use CSS variables from styles/variables.css
+- Shadows: --shadow-small, --shadow-medium, --shadow-big
+- Glass background: --glass-bg-light, --glass-bg-dark
+- Glass border: --glass-border-light, --glass-border-dark
+- Backdrop filter: --glass-backdrop-filter
+
+### Components
+- GlassButton variants: default, primary, danger, yellow, unstyled, active
+- For delete actions: Use GlassButton with variant="danger"
+- For header buttons: Use GlassButton with variant="unstyled"
+
+### Keyboard Shortcuts
+- Use useKeyboardShortcuts hook from utils/keyboardShortcuts.ts
+- Use capture phase for browser conflict prevention
+- Platform-aware: "cmd+n" works on both Mac and Windows
+- Don't duplicate shortcuts for cmd/ctrl - hook handles it automatically
+
+### Storage
+- Use IndexedDB via utils/storage.ts
+- Functions: savePage(), getAllPages(), deletePage()
+- Load on mount with loadPagesFromStorage() in app/page.tsx
+
+### Navigation
+- Views: 'list' | 'editor' in navigationStore
+- Use setView(view, noteId) to navigate
+- Use goBack() to return to list view
+- Always save current note before navigation
+
+### Date Grouping
+- Use groupPagesByDate() from utils/dateGrouping.ts
+- Groups: Today, Yesterday, Previous 7 Days, Previous 30 Days, Older
+
+### Search Highlighting
+- Use highlightText() from utils/highlightText.tsx
+- Returns React nodes with <span class="search-highlight">
+- Styles in styles/utilities.css (yellow shadow, not block background)
+
+---
+
+## 2024-01-29 - US-001 Glass morphism design system
+- What was implemented: CSS variables for glass backgrounds, borders, and shadows
+- Files changed:
+  - styles/variables.css (added glass and shadow variables)
+  - app/page.css (applied glass to desktop-container)
+  - components/layout/AppWindow/AppWindow.css (applied glass to app-window-main)
+- **Learnings for future iterations:**
+  - Glass background uses rgba with low opacity (0.1)
+  - Inset shadow creates the inner glow effect
+  - Backdrop-filter needs both blur and saturate for Apple-like glass
+---
+
+## 2024-01-29 - US-002 GlassButton component with variants
+- What was implemented: GlassButton component with 6 variants
+- Files changed:
+  - components/ui/GlassButton/GlassButton.tsx (added variants)
+  - components/ui/GlassButton/GlassButton.css (variant styles)
+- **Learnings for future iterations:**
+  - For colored variants (primary, danger, yellow), only change opacity on hover
+  - Use :not() selectors to exclude colored variants from default hover
+  - Unstyled variant: transparent background, light grey hover
+---
+
+## 2024-01-29 - US-003 AppWindow layout with three-section header
+- What was implemented: CSS Grid header with left/middle/right sections
+- Files changed:
+  - components/layout/AppWindow/AppWindow.tsx (restructured header)
+  - components/layout/AppWindow/AppWindow.css (grid layout)
+- **Learnings for future iterations:**
+  - Use CSS Grid with `grid-template-columns: auto 1fr auto` for header
+  - Middle section (title) should always be visible for layout stability
+  - Conditional buttons: check isFileOpen before rendering
+---
+
+## 2024-01-29 - US-004 Collapsible sidebar with date grouping
+- What was implemented: Sidebar with collapse, date groups, mobile hiding
+- Files changed:
+  - components/layout/Sidebar/CollapsibleSidebar.tsx
+  - components/layout/Sidebar/CollapsibleSidebar.css
+  - utils/dateGrouping.ts
+- **Learnings for future iterations:**
+  - On mobile (<768px): Hide sidebar completely, don't just collapse
+  - Group titles should NOT be uppercase (user preference)
+  - Place "New note" button next to group title, not in header
+---
+
+## 2024-01-29 - US-005 Note CRUD with IndexedDB storage
+- What was implemented: Full CRUD operations with IndexedDB persistence
+- Files changed:
+  - utils/storage.ts (IndexedDB operations)
+  - stores/pageStore.ts (integrated storage)
+  - app/page.tsx (load on mount)
+- **Learnings for future iterations:**
+  - Use idb library for IndexedDB wrapper
+  - Always sort pages by updatedAt descending after loading
+  - Save asynchronously, don't block UI
+  - "Maximum update depth exceeded" error: Check useEffect dependencies
+---
+
+## 2024-01-29 - US-006 Swipe-to-delete on sidebar note items
+- What was implemented: Swipe gesture for deleting notes
+- Files changed:
+  - components/layout/Sidebar/NoteItem.tsx
+  - components/layout/Sidebar/NoteItem.css
+- **Learnings for future iterations:**
+  - Use useRef for swipe offset to avoid stale closure in event handlers
+  - Support both touch (onTouchStart/Move/End) and mouse (onMouseDown/Move/Up)
+  - Delete threshold: 50% of item width
+  - Delete button position: Fixed to right edge of parent, not sliding with item
+  - Use GlassButton with variant="danger" for delete button
+---
+
+## 2024-01-29 - US-007 ListView with responsive grid
+- What was implemented: Flexbox grid for note cards
+- Files changed:
+  - components/views/ListView/ListView.tsx
+  - components/views/ListView/ListView.css
+  - components/layout/Sidebar/NoteItemFull.tsx (new component)
+- **Learnings for future iterations:**
+  - Use flexbox with flex-wrap, not complex media queries
+  - NoteItemFull: No swipe delete, full card with preview
+  - Date metadata at bottom: Use flexbox with margin-top: auto
+---
+
+## 2024-01-29 - US-008 Search with yellow shadow highlighting
+- What was implemented: Search filtering and text highlighting
+- Files changed:
+  - utils/highlightText.tsx
+  - styles/utilities.css (.search-highlight class)
+  - components/views/ListView/ListView.tsx
+  - components/layout/Sidebar/CollapsibleSidebar.tsx
+- **Learnings for future iterations:**
+  - Highlight style: Yellow shadow underneath text, NOT block background
+  - Use box-shadow: `0 2px 0px 0px rgba(255, 235, 59, 0.5)`
+  - Group titles show search query with highlighting when searching
+---
+
+## 2024-01-29 - US-009 Keyboard shortcuts system
+- What was implemented: Reusable keyboard shortcuts hook with platform support
+- Files changed:
+  - utils/keyboardShortcuts.ts (main hook)
+  - utils/noteActions.ts (pure functions for actions)
+  - hooks/useGlobalShortcuts.ts (Cmd+N, Cmd+S)
+  - hooks/useEditorShortcuts.ts (ESC)
+  - app/page.tsx (register global shortcuts)
+  - components/views/EditorView/EditorView.tsx (register editor shortcuts)
+- **Learnings for future iterations:**
+  - Use capture phase (`{ capture: true }`) to prevent browser defaults
+  - Use stopImmediatePropagation() in addition to preventDefault()
+  - Platform detection: isMac() checks navigator.platform
+  - "cmd+n" automatically maps to Ctrl on Windows/Linux
+  - Don't need separate shortcuts for cmd and ctrl
+  - Keep business logic in pure functions (noteActions.ts), not hooks
+---
+
+## 2024-01-29 - US-010 Editable note title in TopBar
+- What was implemented: Click-to-edit title in TopBar
+- Files changed:
+  - components/layout/TopBar/TopBar.tsx
+  - components/layout/TopBar/TopBar.css
+- **Learnings for future iterations:**
+  - Use isEditing state to toggle between span and input
+  - Save on blur and Enter key
+  - Cancel on Escape key (restore original value)
+  - Update both page title and first block content
+---
+
+

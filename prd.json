@@ -1,0 +1,254 @@
+{
+  "project": "LifeNote",
+  "branchName": "ralph/note-app-features",
+  "description": "Apple-inspired note-taking app with glass morphism design, local storage, and intuitive navigation",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Glass morphism design system",
+      "description": "As a user, I want the app to have an Apple-inspired glass morphism design with transparent backgrounds and soft shadows.",
+      "acceptanceCriteria": [
+        "CSS variables for glass backgrounds (light/dark mode)",
+        "CSS variables for glass borders with transparency",
+        "Three-tier shadow system (small, medium, big) with inset highlights",
+        "Backdrop filter: blur(20px) saturate(180%)",
+        "Applied to desktop-container and app-window-main",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Completed. Variables in styles/variables.css. Glass applied to page.css and AppWindow.css"
+    },
+    {
+      "id": "US-002",
+      "title": "GlassButton component with variants",
+      "description": "As a developer, I need a reusable button component with multiple style variants for consistent UI.",
+      "acceptanceCriteria": [
+        "Default variant (standard glass style)",
+        "Primary variant (blue accent)",
+        "Danger variant (red accent for delete actions)",
+        "Yellow variant (special actions)",
+        "Unstyled variant (no background, light grey hover)",
+        "Active variant (active state)",
+        "Colored variants: only opacity changes on hover",
+        "Icon support and ARIA labels",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Completed. Component in components/ui/GlassButton/"
+    },
+    {
+      "id": "US-003",
+      "title": "AppWindow layout with three-section header",
+      "description": "As a user, I want a consistent app window layout with organized header sections.",
+      "acceptanceCriteria": [
+        "Three-section header using CSS Grid (left, middle, right)",
+        "Left: Window controls, sidebar toggle, back button (conditional)",
+        "Middle: App title (always visible, shows 'New Page' or page title)",
+        "Right: Settings, Done, More, Delete buttons (conditional)",
+        "Transparent main content with 10% blur",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Completed. Component in components/layout/AppWindow/"
+    },
+    {
+      "id": "US-004",
+      "title": "Collapsible sidebar with date grouping",
+      "description": "As a user, I want a collapsible sidebar that organizes my notes by date.",
+      "acceptanceCriteria": [
+        "Desktop: Collapsible sidebar (fully closed when collapsed, no sneak peek)",
+        "Mobile: Completely hidden (not rendered)",
+        "Date-based grouping (Today, Yesterday, Previous 7 Days, etc.)",
+        "Non-capitalized group titles",
+        "New note button next to each group title",
+        "Sidebar toggle in AppWindow header",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Completed. Component in components/layout/Sidebar/CollapsibleSidebar.tsx"
+    },
+    {
+      "id": "US-005",
+      "title": "Note CRUD with IndexedDB storage",
+      "description": "As a user, I want to create, read, update, and delete notes that persist locally.",
+      "acceptanceCriteria": [
+        "Create notes via button or Cmd+N keyboard shortcut",
+        "Notes stored in IndexedDB with Page structure (id, title, blocks, timestamps)",
+        "Auto-save on navigation, ESC key, Back/Done buttons",
+        "Manual save with Cmd+S keyboard shortcut",
+        "Delete via swipe or header button with confirmation",
+        "Auto-close editor if deleted note was active",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "Completed. Storage in utils/storage.ts, store in stores/pageStore.ts"
+    },
+    {
+      "id": "US-006",
+      "title": "Swipe-to-delete on sidebar note items",
+      "description": "As a user, I want to delete notes by swiping on sidebar items (like Apple Notes).",
+      "acceptanceCriteria": [
+        "Swipe right-to-left reveals trash icon",
+        "Delete triggers at 50% swipe threshold",
+        "Touch support for mobile",
+        "Mouse drag support for desktop",
+        "Delete button fixed to right edge (doesn't slide with item)",
+        "Uses GlassButton with danger variant",
+        "Smooth animations",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "Completed. Component in components/layout/Sidebar/NoteItem.tsx"
+    },
+    {
+      "id": "US-007",
+      "title": "ListView with responsive grid",
+      "description": "As a user, I want to see all my notes in a responsive grid layout.",
+      "acceptanceCriteria": [
+        "Flexbox-based responsive grid",
+        "Maximum 3 columns, minimum item width 150px",
+        "NoteItemFull component (no swipe delete)",
+        "Date metadata positioned at bottom of card",
+        "Empty states for no notes and no search results",
+        "Search integration",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "Completed. Component in components/views/ListView/"
+    },
+    {
+      "id": "US-008",
+      "title": "Search with yellow shadow highlighting",
+      "description": "As a user, I want to search notes and see matching text highlighted.",
+      "acceptanceCriteria": [
+        "Search input in BottomToolbar (list view)",
+        "Real-time filtering as user types",
+        "Yellow shadow text highlight (not block background)",
+        "Matching files reordered to top",
+        "Group titles show search query with highlighting",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Completed. Highlight in utils/highlightText.tsx, styles in styles/utilities.css"
+    },
+    {
+      "id": "US-009",
+      "title": "Keyboard shortcuts system",
+      "description": "As a user, I want keyboard shortcuts for common actions.",
+      "acceptanceCriteria": [
+        "Reusable useKeyboardShortcuts hook",
+        "Platform-aware: cmd works on Mac (metaKey) and Windows (ctrlKey)",
+        "Browser conflict prevention (capture phase event listeners)",
+        "Input-safe (doesn't trigger when typing, except Escape)",
+        "Global shortcuts: Cmd+N (new), Cmd+S (save)",
+        "Editor shortcuts: ESC (save and go back)",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Completed. Hook in utils/keyboardShortcuts.ts, hooks in hooks/useGlobalShortcuts.ts and hooks/useEditorShortcuts.ts"
+    },
+    {
+      "id": "US-010",
+      "title": "Editable note title in TopBar",
+      "description": "As a user, I want to edit the note title directly in the top bar.",
+      "acceptanceCriteria": [
+        "Click title to edit",
+        "Save on blur or Enter key",
+        "Cancel on Escape key",
+        "Update first block content when title changes",
+        "Fallback to 'Untitled' if empty",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Completed. Component in components/layout/TopBar/TopBar.tsx"
+    },
+    {
+      "id": "US-011",
+      "title": "Voice input functionality",
+      "description": "As a user, I want to input notes using voice.",
+      "acceptanceCriteria": [
+        "Voice input button in BottomToolbar",
+        "Web Speech API integration",
+        "Visual feedback during recording",
+        "Transcribed text inserted into editor",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": "Button exists but functionality not implemented"
+    },
+    {
+      "id": "US-012",
+      "title": "Rich text formatting",
+      "description": "As a user, I want to format text with bold, italic, underline, etc.",
+      "acceptanceCriteria": [
+        "Bold formatting (Cmd+B)",
+        "Italic formatting (Cmd+I)",
+        "Underline formatting (Cmd+U)",
+        "Strikethrough formatting",
+        "Highlight/marker formatting",
+        "Link insertion",
+        "Formatting buttons work in BottomToolbar",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": "Buttons exist but functionality not implemented"
+    },
+    {
+      "id": "US-013",
+      "title": "More options menu",
+      "description": "As a user, I want additional options for notes via a menu.",
+      "acceptanceCriteria": [
+        "More options button in header",
+        "Dropdown menu with additional actions",
+        "Actions: Share, Export, Duplicate, Move to folder",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": "Button exists but menu not implemented"
+    },
+    {
+      "id": "US-014",
+      "title": "Note export functionality",
+      "description": "As a user, I want to export my notes to different formats.",
+      "acceptanceCriteria": [
+        "Export to Markdown",
+        "Export to plain text",
+        "Export to PDF (optional)",
+        "Download file with proper filename",
+        "Typecheck passes"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Search in note content",
+      "description": "As a user, I want search to find text within note content, not just titles.",
+      "acceptanceCriteria": [
+        "Search queries note content (blocks)",
+        "Highlight matching text in search results",
+        "Show snippet of matching content",
+        "Debounced search input",
+        "Typecheck passes"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": "Currently only searches titles"
+    }
+  ]
+}
+
