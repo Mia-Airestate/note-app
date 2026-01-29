@@ -13,7 +13,20 @@ export function Editor() {
 
   useEffect(() => {
     if (activePage) {
-      setBlocks(activePage.blocks);
+      // Use flowBlocks if available, otherwise fall back to blocks for backward compatibility
+      const blocksToSet = activePage.flowBlocks 
+        ? activePage.flowBlocks.map(flowBlock => ({
+            id: flowBlock.id,
+            type: flowBlock.type as any,
+            content: flowBlock.content,
+            formats: flowBlock.formats,
+            props: flowBlock.props as any,
+            children: flowBlock.children as any,
+            indent: flowBlock.indent,
+            layoutMode: 'flow' as const,
+          }))
+        : (activePage.blocks || []);
+      setBlocks(blocksToSet);
     } else {
       setBlocks([]);
     }

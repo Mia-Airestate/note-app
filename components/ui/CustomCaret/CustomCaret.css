@@ -1,0 +1,23 @@
+.custom-caret {
+  position: absolute;
+  width: 2px;
+  background: #007AFF;
+  box-shadow: 0 0 8px rgba(0, 122, 255, 0.8), 0 0 16px rgba(0, 122, 255, 0.4);
+  pointer-events: none;
+  z-index: 1000;
+  animation: caretBlink 1s ease-in-out infinite;
+}
+
+@keyframes caretBlink {
+  0%,
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(0, 122, 255, 0.8), 0 0 16px rgba(0, 122, 255, 0.4);
+  }
+  51%,
+  100% {
+    opacity: 0.3;
+    box-shadow: 0 0 4px rgba(0, 122, 255, 0.4), 0 0 8px rgba(0, 122, 255, 0.2);
+  }
+}
+

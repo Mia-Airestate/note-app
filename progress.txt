@@ -33,6 +33,7 @@
 - Use IndexedDB via utils/storage.ts
 - Functions: savePage(), getAllPages(), deletePage()
 - Load on mount with loadPagesFromStorage() in app/page.tsx
+- Hybrid approach: IndexedDB for persistence + markdown export on demand
 
 ### Navigation
 - Views: 'list' | 'editor' in navigationStore
@@ -48,6 +49,29 @@
 - Use highlightText() from utils/highlightText.tsx
 - Returns React nodes with <span class="search-highlight">
 - Styles in styles/utilities.css (yellow shadow, not block background)
+
+### Block Editor Architecture (NEW)
+- **Single Source of Truth**: config/blockMenuConfig.ts drives both slash menu and bottom bar
+- **Block Types**: paragraph, heading (h1-h6), code, image, list, quote, table, divider
+- **Block Structure**: { id, type, content, formats?, props?, indent? }
+- **Formats Array**: Inline formatting stored as { type, start, end, data? }
+- **useBlockEditor Hook**: Adapted from NewPage-main, integrates with editorStore
+- **EditableBlock**: Base component for all text-editable blocks (contentEditable)
+- **CustomCaret**: Blue glow caret positioned at cursor, native caret hidden
+
+### Menu Config Pattern (NEW)
+- All menu items defined in config/blockMenuConfig.ts
+- Each item: { id, label, icon, category, slashCommands[], shortcut?, showInSlashMenu?, showInBottomBar? }
+- Categories: 'blocks' (insertable) and 'format' (text formatting)
+- Conditional functions receive selection state to determine visibility
+- SlashMenu: Absolute positioned at cursor, glass styling, no overlay
+- BottomBar: Contextual based on selection (blocks / formatting / block actions)
+
+### Selection States (NEW)
+- 'none': No selection, show block insertion buttons
+- 'caret': Cursor in text block, show block insertion buttons
+- 'text': Text range selected, show formatting buttons
+- 'block': Entire block selected, show block action buttons
 
 ---
 
@@ -176,6 +200,174 @@
   - Save on blur and Enter key
   - Cancel on Escape key (restore original value)
   - Update both page title and first block content
+---
+
+## 2026-01-29 - Block Editor Foundation Plan
+- **Goal**: Build intuitive block-based editor with natural UX
+- **Key Decisions**:
+  - Storage: Hybrid (IndexedDB + markdown export)
+  - Approach: Adapt NewPage-main's useBlockEditor hook to Zustand
+  - Libraries: Ask before installing any new packages
+- **Implementation Order**:
+  1. US-016: Unified block menu config (single source of truth)
+  2. US-017: Block editor core with useBlockEditor hook
+  3. US-018: Custom blue caret with glow animation
+  4. US-019: Editable blocks with contentEditable
+  5. US-020: Slash menu with glass styling
+  6. US-021: Contextual bottom bar
+  7. US-022: Arrow key navigation
+  8. US-023: Text formatting shortcuts
+  9. US-024: Markdown export
+- **Files to Create**:
+  - config/blockMenuConfig.ts (menu items, conditionals)
+  - hooks/useBlockEditor.ts (block CRUD)
+  - hooks/useBlockNavigation.ts (arrow keys)
+  - components/ui/CustomCaret/CustomCaret.tsx
+  - components/blocks/EditableBlock.tsx
+  - utils/markdownExport.ts
+- **Architecture**:
+  - blockMenuConfig.ts -> SlashMenu + BottomToolbar (synchronized)
+  - useBlockEditor -> editorStore (Zustand)
+  - EditableBlock -> CustomCaret (visual)
+---
+
+## 2026-01-29 - US-016 Unified block menu config (single source of truth)
+- What was implemented: Created config/blockMenuConfig.ts as single source of truth for both slash menu and bottom bar
+- Files changed:
+  - config/blockMenuConfig.ts (NEW - all menu items with conditionals)
+- **Learnings for future iterations:**
+  - Single config file ensures menus stay synchronized automatically
+  - Conditional functions (showInSlashMenu, showInBottomBar) receive selection state for context-aware filtering
+  - Helper functions (getSlashMenuItems, getBottomBarItems) make it easy to filter by context
+  - Icons can be strings (for simple blocks) or React components (for formatting icons)
+  - Categories: 'blocks' (insertable), 'format' (text formatting), 'actions' (future: block actions)
+---
+
+## 2026-01-29 - US-017 Block editor core with useBlockEditor hook
+- What was implemented: Created hooks/useBlockEditor.ts adapted from NewPage-main, simplified for Zustand integration
+- Files changed:
+  - hooks/useBlockEditor.ts (NEW - block CRUD operations)
+- **Learnings for future iterations:**
+  - Zustand's setBlocks expects Block[] directly, not a function - use getState() to read current state
+  - Simplified version removes groups/tabs/indentation complexity from NewPage-main (can add later if needed)
+  - Hook integrates seamlessly with editorStore - uses store methods directly
+  - Focus management handled in hook (setFocusedBlock, setCaretPosition)
+  - Helper methods: moveBlockUp, moveBlockDown, duplicateBlock for common operations
+---
+
+## 2026-01-29 - US-018 Custom blue caret with glow animation
+- What was implemented: Created CustomCaret component with blue glow effect and blink animation
+- Files changed:
+  - components/ui/CustomCaret/CustomCaret.tsx (NEW)
+  - components/ui/CustomCaret/CustomCaret.css (NEW)
+  - styles/caret.css (NEW - selection styles and native caret hiding)
+  - app/globals.css (MODIFY - added caret.css import)
+- **Learnings for future iterations:**
+  - CustomCaret tracks selection position using Selection API and getBoundingClientRect()
+  - Position calculation accounts for line-height and font-size for proper vertical centering
+  - Empty block handling: centers caret when no text is present
+  - Blink animation uses opacity fade (0.3 to 1.0) not on/off for smoother effect
+  - Blue glow uses box-shadow with rgba(0, 122, 255, ...) for Apple-like appearance
+  - Native caret hidden with caret-color: transparent in contentEditable elements
+  - Selection color set to blue (#007AFF) using ::selection pseudo-element
+---
+
+## 2026-01-29 - US-019 Editable blocks with contentEditable
+- What was implemented: Created EditableBlock base component and updated Paragraph/Heading to use it
+- Files changed:
+  - components/blocks/EditableBlock.tsx (NEW)
+  - components/blocks/EditableBlock.css (NEW)
+  - components/blocks/Paragraph/Paragraph.tsx (MODIFY - uses EditableBlock)
+  - components/blocks/Heading/Heading.tsx (MODIFY - uses EditableBlock)
+- **Learnings for future iterations:**
+  - contentEditable requires controlled content with state sync to block.content
+  - Auto-height adjustment using scrollHeight for multi-line text
+  - Paste handler strips formatting and inserts plain text only
+  - Enter key creates new block via onCreateBlockAfter callback or addBlock()
+  - Backspace on empty block deletes via deleteBlock()
+  - Slash key (/) triggers onOpenSlashMenu callback with cursor position
+  - CustomCaret integrated and shows when block is focused
+  - Click handling positions caret at nearest text position
+  - Tab key placeholder for future indent/outdent feature
+---
+
+## 2026-01-29 - US-020 Slash menu with glass styling
+- What was implemented: Enhanced SlashMenu with glass morphism styling, search, keyboard navigation
+- Files changed:
+  - components/menus/SlashMenu/SlashMenu.tsx (MODIFY - uses blockMenuConfig, glass styling)
+  - components/menus/SlashMenu/SlashMenu.css (MODIFY - glass morphism styles)
+  - hooks/useSlashMenu.ts (NEW - menu state management)
+- **Learnings for future iterations:**
+  - Glass styling uses var(--glass-bg-light), var(--glass-backdrop-filter), var(--glass-border-light)
+  - Absolute positioning (not fixed) - follows cursor position, no backdrop overlay
+  - Items filtered from blockMenuConfig using getSlashMenuItems()
+  - Search filters by label and slashCommands
+  - Keyboard navigation: Arrow keys cycle selection, Enter selects, Escape closes
+  - Icon rendering handles both string icons and React component icons
+  - Click outside closes menu via mousedown event listener
+---
+
+## 2026-01-29 - US-021 Contextual bottom bar
+- What was implemented: Updated BottomToolbar to show different items based on selection state
+- Files changed:
+  - components/layout/BottomToolbar/BottomToolbar.tsx (MODIFY - uses blockMenuConfig, contextual display)
+  - components/ui/GlassButton/GlassButton.tsx (MODIFY - accepts string icons)
+  - components/ui/GlassButton/GlassButton.css (MODIFY - added icon-text styling)
+- **Learnings for future iterations:**
+  - Contextual display: block items when selection?.type !== 'text', format items when selection?.type === 'text'
+  - Items filtered from blockMenuConfig using getBottomBarBlockItems() and getBottomBarFormatItems()
+  - GlassButton updated to accept string icons (for block type buttons) or React components (for formatting icons)
+  - Block selection triggers addBlock() with appropriate blockType
+  - Format selection placeholder (will be implemented in US-023)
+  - Smooth transition between states handled by React re-render
+---
+
+## 2026-01-29 - US-022 Arrow key navigation between blocks
+- What was implemented: Created useBlockNavigation hook for natural document navigation
+- Files changed:
+  - hooks/useBlockNavigation.ts (NEW)
+  - components/blocks/EditableBlock.tsx (MODIFY - integrated navigation hook)
+- **Learnings for future iterations:**
+  - Arrow Up/Left at cursor position 0 moves to previous block (caret at end)
+  - Arrow Down/Right at end of content moves to next block (caret at start)
+  - Uses querySelector with data-block-id attribute to find block elements
+  - Focus management with proper caret positioning using Selection API
+  - setTimeout(0) needed for caret positioning to work after focus()
+  - Returns boolean to indicate if navigation was handled (prevents default behavior)
+---
+
+## 2026-01-29 - US-023 Text formatting with keyboard shortcuts
+- What was implemented: Formatting shortcuts and utilities for inline text formatting
+- Files changed:
+  - utils/formatText.ts (NEW - apply/remove/toggle formatting)
+  - utils/renderFormattedText.tsx (NEW - render formatted text visually)
+  - types/block.ts (MODIFY - updated InlineFormat type)
+  - components/blocks/EditableBlock.tsx (MODIFY - handles cmd+b/i/u/e shortcuts)
+  - components/layout/BottomToolbar/BottomToolbar.tsx (MODIFY - formatting buttons functional)
+  - hooks/useEditorShortcuts.ts (MODIFY - removed formatting shortcuts, handled in EditableBlock)
+- **Learnings for future iterations:**
+  - Formatting shortcuts must be handled in EditableBlock (contentEditable), not global shortcuts hook
+  - Formatting stored as array of { type, start, end, data? } objects
+  - Position calculation uses Range API: cloneRange, selectNodeContents, toString().length
+  - toggleFormat() checks if format exists, removes if present, adds if absent
+  - Formatting positions need adjustment when content changes (insert/delete)
+  - Visual rendering of formatted text uses renderFormattedText() utility (future: integrate into EditableBlock display)
+  - BottomToolbar formatting buttons work when text is selected
+---
+
+## 2026-01-29 - US-024 Markdown export
+- What was implemented: Created markdown export utility for converting pages to markdown files
+- Files changed:
+  - utils/markdownExport.ts (NEW - serialize blocks to markdown, download function)
+- **Learnings for future iterations:**
+  - Headings: # ## ### etc. based on block.props.level
+  - Lists: - (unordered), 1. (ordered), - [ ] (checklist)
+  - Code blocks: ```language with language from block.props.language
+  - Images: ![alt](src) format
+  - Inline formatting: **bold**, *italic*, `code`, [link](url), ~~strikethrough~~
+  - applyInlineFormats() handles nested formatting by building segments array
+  - downloadPageAsMarkdown() creates Blob and triggers download with page title as filename
+  - Export preserves block structure and formatting
 ---
 
 

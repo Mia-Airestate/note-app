@@ -7,6 +7,7 @@ import { useEditorStore } from '@/stores/editorStore';
 /**
  * Hook for registering editor-specific keyboard shortcuts
  * These shortcuts only work when the editor is active
+ * Note: Formatting shortcuts (cmd+b, cmd+i, etc.) are handled in EditableBlock component
  */
 export function useEditorShortcuts() {
   const currentView = useNavigationStore((state) => state.currentView);

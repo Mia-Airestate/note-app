@@ -5,7 +5,6 @@ import { useNavigationStore } from '@/stores/navigationStore';
 import { usePageStore } from '@/stores/pageStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import { AppWindow } from '@/components/layout/AppWindow/AppWindow';
-import { TopBar } from '@/components/layout/TopBar/TopBar';
 import { ListView } from '@/components/views/ListView/ListView';
 import { EditorView } from '@/components/views/EditorView/EditorView';
 import { BottomToolbar } from '@/components/layout/BottomToolbar/BottomToolbar';
@@ -33,7 +32,6 @@ export default function Home() {
     <div className="desktop-background">
       <div className="desktop-container">
         <AppWindow searchQuery={searchQuery}>
-          <TopBar />
           {currentView === 'list' ? (
             <ListView searchQuery={searchQuery} />
           ) : (

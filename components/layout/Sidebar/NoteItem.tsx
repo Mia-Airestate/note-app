@@ -18,7 +18,7 @@ interface NoteItemProps {
 }
 
 export function NoteItem({ page, isActive, onClick, onDelete, searchQuery }: NoteItemProps) {
-  const preview = getNotePreview(page.blocks);
+  const preview = getNotePreview(page.flowBlocks || page.blocks);
   const dateStr = formatNoteDate(page.updatedAt);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);

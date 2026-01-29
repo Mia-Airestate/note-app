@@ -1,0 +1,8 @@
+.page-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-sm);
+  background: var(--glass-white);
+  padding-bottom: calc(var(--bottom-bar-height) + var(--spacing-xl));
+}
+

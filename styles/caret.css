@@ -1,0 +1,18 @@
+/* Blue text selection */
+::selection {
+  background: #007AFF;
+  background: color(display-p3 0 0.478 1);
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background: #007AFF;
+  background: color(display-p3 0 0.478 1);
+  color: #ffffff;
+}
+
+/* Hide native caret in contentEditable elements */
+[contenteditable='true'] {
+  caret-color: transparent;
+}
+

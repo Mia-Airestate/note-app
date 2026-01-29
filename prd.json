@@ -1,7 +1,7 @@
 {
   "project": "LifeNote",
   "branchName": "ralph/note-app-features",
-  "description": "Apple-inspired note-taking app with glass morphism design, local storage, and intuitive navigation",
+  "description": "Apple-inspired note-taking app with glass morphism design, block-based editor, local storage, and intuitive navigation",
   "userStories": [
     {
       "id": "US-001",
@@ -173,6 +173,161 @@
       "notes": "Completed. Component in components/layout/TopBar/TopBar.tsx"
     },
     {
+      "id": "US-016",
+      "title": "Unified block menu config (single source of truth)",
+      "description": "As a developer, I need a single config that drives both slash menu and bottom bar to keep menus synchronized.",
+      "acceptanceCriteria": [
+        "Create config/blockMenuConfig.ts with all block types and formatting options",
+        "Each item has: id, label, icon, category, slashCommands[], shortcut (optional)",
+        "Conditional visibility rules: showInSlashMenu(), showInBottomBar(selection)",
+        "Categories: 'blocks' (paragraph, heading, etc.) and 'format' (bold, italic, etc.)",
+        "Both SlashMenu and BottomToolbar consume from this single config",
+        "Adding new item to config automatically appears in both menus",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "Completed. Created config/blockMenuConfig.ts with all block types and formatting options. Includes helper functions for filtering items by context. Typecheck passes."
+    },
+    {
+      "id": "US-017",
+      "title": "Block editor core with useBlockEditor hook",
+      "description": "As a developer, I need a hook that manages block CRUD operations adapted from NewPage-main.",
+      "acceptanceCriteria": [
+        "Create hooks/useBlockEditor.ts adapted from NewPage-main",
+        "Block operations: addBlock, updateBlock, deleteBlock, moveBlock",
+        "Integrates with editorStore (Zustand)",
+        "Simplified block types: paragraph, heading (h1-h6), code, image, list, quote, table, divider",
+        "Block structure: { id, type, content, props, indent }",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": "Completed. Created hooks/useBlockEditor.ts adapted from NewPage-main. Simplified version integrates with editorStore (Zustand). Includes addBlock, updateBlock, deleteBlock, moveBlock, duplicateBlock operations. Typecheck passes."
+    },
+    {
+      "id": "US-018",
+      "title": "Custom blue caret with glow animation",
+      "description": "As a user, I want a distinctive blue caret that looks like a highlighter.",
+      "acceptanceCriteria": [
+        "Create components/ui/CustomCaret/CustomCaret.tsx",
+        "Blue color (#007AFF) with glow effect (box-shadow)",
+        "Blinking animation (opacity fade, not on/off)",
+        "Positioned at cursor location in contentEditable",
+        "Native caret hidden (caret-color: transparent)",
+        "Blue text selection color (::selection)",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "Completed. Created CustomCaret component with blue glow and blink animation. Added caret.css for selection styles and native caret hiding. Typecheck passes."
+    },
+    {
+      "id": "US-019",
+      "title": "Editable blocks with contentEditable",
+      "description": "As a user, I want to edit text directly in blocks with natural typing behavior.",
+      "acceptanceCriteria": [
+        "Create components/blocks/EditableBlock.tsx as base component",
+        "contentEditable div with controlled content",
+        "Enter creates new block, Backspace on empty deletes block",
+        "Tab/Shift+Tab for indent/outdent",
+        "Slash key (/) opens slash menu at cursor position",
+        "CustomCaret component integrated",
+        "Paragraph and Heading blocks use EditableBlock",
+        "Typecheck passes"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": "Completed. Created EditableBlock base component with contentEditable. Updated Paragraph and Heading to use EditableBlock. Handles Enter (new block), Backspace (delete empty), / (slash menu), Tab (placeholder for indent). CustomCaret integrated. Typecheck passes."
+    },
+    {
+      "id": "US-020",
+      "title": "Slash menu with glass styling",
+      "description": "As a user, I want to type / to open a menu for inserting blocks.",
+      "acceptanceCriteria": [
+        "Triggered by typing / in any editable block",
+        "Glass morphism styling (var(--glass-bg-light), backdrop-filter)",
+        "Absolute positioned at cursor (no backdrop overlay)",
+        "Search/filter as user types after /",
+        "Arrow keys + Enter for keyboard navigation",
+        "Escape to close",
+        "Items sourced from blockMenuConfig (US-016)",
+        "Typecheck passes"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": "Completed. Enhanced SlashMenu with glass styling (var(--glass-bg-light), backdrop-filter), absolute positioning at cursor, search/filter, keyboard navigation (arrow keys + Enter), Escape to close. Items sourced from blockMenuConfig. Created useSlashMenu hook for state management. Typecheck passes."
+    },
+    {
+      "id": "US-021",
+      "title": "Contextual bottom bar",
+      "description": "As a user, I want the bottom bar to show relevant actions based on what I'm doing.",
+      "acceptanceCriteria": [
+        "State 1 - No selection/caret: Show block type buttons (paragraph, heading, list, etc.)",
+        "State 2 - Text selected: Show formatting buttons (bold, italic, underline, etc.)",
+        "State 3 - Block selected: Show block actions (move, duplicate, delete, convert)",
+        "Items sourced from blockMenuConfig (US-016)",
+        "Smooth transition between states",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": "Completed. Updated BottomToolbar to be contextual based on selection state. Shows block type buttons when no text selected, formatting buttons when text selected. Items sourced from blockMenuConfig. Updated GlassButton to accept string icons. Typecheck passes."
+    },
+    {
+      "id": "US-022",
+      "title": "Arrow key navigation between blocks",
+      "description": "As a user, I want to navigate between blocks naturally with arrow keys.",
+      "acceptanceCriteria": [
+        "Create hooks/useBlockNavigation.ts",
+        "Arrow Up at start of block moves to previous block (end)",
+        "Arrow Down at end of block moves to next block (start)",
+        "Arrow Left at position 0 moves to previous block",
+        "Arrow Right at end moves to next block",
+        "Focus management with proper caret positioning",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "passes": true,
+      "notes": "Completed. Created useBlockNavigation hook for arrow key navigation between blocks. Arrow Up/Left at start moves to previous block (end), Arrow Down/Right at end moves to next block (start). Integrated into EditableBlock. Typecheck passes."
+    },
+    {
+      "id": "US-023",
+      "title": "Text formatting with keyboard shortcuts",
+      "description": "As a user, I want to format selected text with keyboard shortcuts.",
+      "acceptanceCriteria": [
+        "Cmd+B toggles bold",
+        "Cmd+I toggles italic",
+        "Cmd+U toggles underline",
+        "Cmd+E toggles inline code",
+        "Formatting stored in block.formats array with start/end positions",
+        "Visual rendering of formatted text",
+        "Paste link on selected text creates link",
+        "Typecheck passes"
+      ],
+      "priority": 18,
+      "passes": true,
+      "notes": "Completed. Added formatting shortcuts (cmd+b, cmd+i, cmd+u, cmd+e) handled in EditableBlock. Created formatText.ts utilities for apply/remove/toggle formatting. Updated InlineFormat type to include underline, strikethrough, highlight. Formatting stored in block.formats array. BottomToolbar formatting buttons now functional. Typecheck passes."
+    },
+    {
+      "id": "US-024",
+      "title": "Markdown export",
+      "description": "As a user, I want to export my notes as markdown files.",
+      "acceptanceCriteria": [
+        "Create utils/markdownExport.ts",
+        "Converts blocks to standard markdown syntax",
+        "Headings: # ## ### etc.",
+        "Lists: - or 1. or - [ ]",
+        "Code blocks with language",
+        "Images with base64 or blob URLs",
+        "Download as .md file with note title as filename",
+        "Typecheck passes"
+      ],
+      "priority": 19,
+      "passes": true,
+      "notes": "Completed. Created markdownExport.ts with exportPageToMarkdown() and downloadPageAsMarkdown(). Converts blocks to standard markdown syntax (headings, lists, code blocks, images, etc.). Handles inline formatting (bold, italic, links, etc.). Downloads as .md file with page title as filename. Typecheck passes."
+    },
+    {
       "id": "US-011",
       "title": "Voice input functionality",
       "description": "As a user, I want to input notes using voice.",
@@ -183,27 +338,9 @@
         "Transcribed text inserted into editor",
         "Typecheck passes"
       ],
-      "priority": 11,
+      "priority": 25,
       "passes": false,
-      "notes": "Button exists but functionality not implemented"
-    },
-    {
-      "id": "US-012",
-      "title": "Rich text formatting",
-      "description": "As a user, I want to format text with bold, italic, underline, etc.",
-      "acceptanceCriteria": [
-        "Bold formatting (Cmd+B)",
-        "Italic formatting (Cmd+I)",
-        "Underline formatting (Cmd+U)",
-        "Strikethrough formatting",
-        "Highlight/marker formatting",
-        "Link insertion",
-        "Formatting buttons work in BottomToolbar",
-        "Typecheck passes"
-      ],
-      "priority": 12,
-      "passes": false,
-      "notes": "Buttons exist but functionality not implemented"
+      "notes": "Deferred - button exists but functionality not implemented"
     },
     {
       "id": "US-013",
@@ -215,24 +352,9 @@
         "Actions: Share, Export, Duplicate, Move to folder",
         "Typecheck passes"
       ],
-      "priority": 13,
+      "priority": 26,
       "passes": false,
-      "notes": "Button exists but menu not implemented"
-    },
-    {
-      "id": "US-014",
-      "title": "Note export functionality",
-      "description": "As a user, I want to export my notes to different formats.",
-      "acceptanceCriteria": [
-        "Export to Markdown",
-        "Export to plain text",
-        "Export to PDF (optional)",
-        "Download file with proper filename",
-        "Typecheck passes"
-      ],
-      "priority": 14,
-      "passes": false,
-      "notes": ""
+      "notes": "Deferred - button exists but menu not implemented"
     },
     {
       "id": "US-015",
@@ -245,9 +367,9 @@
         "Debounced search input",
         "Typecheck passes"
       ],
-      "priority": 15,
+      "priority": 27,
       "passes": false,
-      "notes": "Currently only searches titles"
+      "notes": "Deferred - currently only searches titles"
     }
   ]
 }

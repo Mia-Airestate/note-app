@@ -104,12 +104,14 @@ export function CollapsibleSidebar({ isCollapsed, onToggle, searchQuery = '' }: 
   // Filter and sort pages based on search query
   const filteredPages = searchQuery
     ? pages
-        .filter((page) =>
-          page.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          page.blocks.some((block) =>
-            block.content.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        )
+        .filter((page) => {
+          const titleMatch = page.title.toLowerCase().includes(searchQuery.toLowerCase());
+          // Search in flowBlocks (new structure) or blocks (legacy)
+          const contentMatch = (page.flowBlocks || page.blocks || []).some((block: any) =>
+            block.content?.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+          return titleMatch || contentMatch;
+        })
         .sort((a, b) => {
           // Sort by relevance: exact title matches first, then by updatedAt
           const aTitleMatch = a.title.toLowerCase().includes(searchQuery.toLowerCase());

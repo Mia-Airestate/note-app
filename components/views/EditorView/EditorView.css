@@ -3,8 +3,6 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--glass-white);
-
 }
 
 .editor-view-empty {
@@ -25,10 +23,16 @@
 }
 
 .editor-view-content {
+  position: relative;
   flex: 1;
   overflow-y: auto;
   padding: var(--spacing-lg);
   padding-bottom: calc(var(--bottom-bar-height) + var(--spacing-lg));
+}
+
+/* Container for blocks and SlashMenu */
+.editor-view-blocks-container {
+  position: relative;
 }
 
 .editor-view-placeholder {
@@ -48,5 +52,6 @@
 .editor-view-blocks {
   max-width: 800px;
   margin: 0 auto;
+  position: relative;
 }
 

@@ -5,7 +5,7 @@ import './GlassButton.css';
 
 interface GlassButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
-  icon: IconType;
+  icon: IconType | string | React.ComponentType<{ size?: number; className?: string }>;
   variant?: 'default' | 'active' | 'primary' | 'danger' | 'yellow' | 'unstyled';
   ariaLabel?: string;
 }
@@ -17,13 +17,24 @@ export function GlassButton({
   ariaLabel,
   ...props
 }: GlassButtonProps) {
+  const renderIcon = () => {
+    if (typeof icon === 'string') {
+      return <span className="glass-button-icon-text">{icon}</span>;
+    }
+    if (typeof icon === 'function') {
+      const IconComponent = icon as React.ComponentType<{ size?: number; className?: string }>;
+      return <IconComponent size={16} className="glass-button-icon" />;
+    }
+    return <Icon icon={icon as IconType} size={16} />;
+  };
+
   return (
     <button
       className={cn('glass-button', `glass-button-${variant}`, className)}
       aria-label={ariaLabel}
       {...props}
     >
-      <Icon icon={icon} size={16} />
+      {renderIcon()}
     </button>
   );
 }

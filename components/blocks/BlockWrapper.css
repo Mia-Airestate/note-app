@@ -3,6 +3,43 @@
   padding: var(--spacing-sm) 0;
   min-height: 24px;
   margin-left: var(--spacing-xl);
+  outline: 0px;
+  cursor: text; /* Default cursor for text blocks */
+}
+
+/* For non-text blocks, use grab cursor */
+.block-container.block-non-text {
+  cursor: grab;
+}
+
+.block-container.block-non-text:active {
+  cursor: grabbing;
+}
+
+/* When hovering over block container but not the editable content, use grab */
+.block-container:hover:not(:has(.editable-block-content:hover)) {
+  cursor: grab;
+}
+
+.block-container:active:not(:has(.editable-block-content:active)) {
+  cursor: grabbing;
+}
+
+/* For text blocks, only show grab when hovering over non-text areas */
+.block-container:has(.editable-block-content):hover .editable-block-content {
+  cursor: text;
+}
+
+.block-container.block-absolute {
+  margin-left: 0;
+  padding: 0;
+}
+
+/* Enable text wrapping around absolute blocks */
+.block-container.block-absolute .block-image {
+  float: left; /* or right, depending on position */
+  shape-outside: margin-box;
+  shape-margin: var(--spacing-md);
 }
 
 .block-container:hover .block-handle {
@@ -36,13 +73,47 @@
 }
 
 .block-focused {
-  outline: 2px solid var(--color-caret);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
+  /* No visual border on focus - caret indicates focus */
 }
 
 .block-selected {
   background-color: var(--color-selection-bg);
+}
+
+.block-dragging {
+  opacity: 0.5;
+}
+
+.block-drag-over-top {
+  position: relative;
+}
+
+.block-drag-over-top::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -24px; /* Extend to include handle area */
+  right: 0;
+  height: 2px;
+  background: var(--color-primary);
+  z-index: 10;
+  box-shadow: 0 0 4px rgba(0, 122, 255, 0.3);
+}
+
+.block-drag-over-bottom {
+  position: relative;
+}
+
+.block-drag-over-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: -24px; /* Extend to include handle area */
+  right: 0;
+  height: 2px;
+  background: var(--color-primary);
+  z-index: 10;
+  box-shadow: 0 0 4px rgba(0, 122, 255, 0.3);
 }
 
 .block-error {

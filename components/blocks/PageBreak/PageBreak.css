@@ -1,0 +1,21 @@
+.block-page-break {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-md) 0;
+}
+
+.block-page-break-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+  opacity: 0.5;
+}
+
+.block-page-break-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+}
+

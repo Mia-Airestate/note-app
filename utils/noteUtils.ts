@@ -7,13 +7,15 @@ import { generateId } from '@/utils/id';
  * Looks for the first heading block, otherwise uses the page title or "Untitled"
  */
 export function getNoteTitle(page: Page): string {
-  if (!page || !page.blocks || page.blocks.length === 0) {
+  // Use flowBlocks (new structure) or blocks (legacy)
+  const blocks = page.flowBlocks || page.blocks || [];
+  if (!page || blocks.length === 0) {
     return page?.title || 'Untitled';
   }
 
   // Find first heading block
-  const headingBlock = page.blocks.find(
-    (block) => block.type === 'heading' && block.content.trim()
+  const headingBlock = blocks.find(
+    (block: any) => block.type === 'heading' && block.content?.trim()
   );
 
   if (headingBlock && headingBlock.content.trim()) {
@@ -25,8 +27,8 @@ export function getNoteTitle(page: Page): string {
     return page.title;
   }
 
-  const firstContentBlock = page.blocks.find(
-    (block) => block.content && block.content.trim()
+  const firstContentBlock = blocks.find(
+    (block: any) => block.content && block.content.trim()
   );
 
   if (firstContentBlock && firstContentBlock.content.trim()) {
@@ -46,8 +48,9 @@ export function pageToMarkdown(page: Page): string {
   // Add title as frontmatter or first heading
   lines.push(`# ${page.title || 'Untitled'}\n`);
 
-  // Convert blocks to markdown
-  page.blocks.forEach((block) => {
+  // Convert blocks to markdown (use flowBlocks or legacy blocks)
+  const blocks = page.flowBlocks || page.blocks || [];
+  blocks.forEach((block: any) => {
     switch (block.type) {
       case 'heading':
         const level = block.props?.level || 1;
@@ -71,7 +74,7 @@ export function pageToMarkdown(page: Page): string {
       case 'list':
         const listType = block.props?.listType || 'unordered';
         if (block.children && block.children.length > 0) {
-          block.children.forEach((child, index) => {
+          block.children.forEach((child: any, index: number) => {
             const prefix = listType === 'ordered' ? `${index + 1}. ` : '- ';
             lines.push(`${prefix}${child.content}`);
           });
@@ -216,11 +219,20 @@ export function markdownToPage(markdown: string, id?: string): Page {
   return {
     id: id || generateId(),
     title,
-    blocks: blocks.length > 0 ? blocks : [{
+    flowBlocks: blocks.length > 0 ? blocks.map((b: any) => ({
+      id: b.id,
+      type: b.type,
+      content: b.content,
+      formats: b.formats,
+      props: b.props,
+      children: b.children,
+      indent: b.indent,
+    })) : [{
       id: generateId(),
       type: 'paragraph',
       content: '',
     }],
+    floatingObjects: [],
     createdAt: now,
     updatedAt: now,
   };

@@ -1,4 +1,5 @@
 .block-image {
+  position: relative;
   margin: var(--spacing-lg) 0;
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -8,15 +9,73 @@
   width: 100%;
   height: auto;
   display: block;
+  /* Enable text wrapping around image */
+  shape-outside: margin-box;
+  shape-margin: var(--spacing-md);
 }
 
 .block-image-placeholder {
-  min-height: 200px;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  background-color: var(--color-bg-secondary);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.block-image-placeholder:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-hover);
+}
+
+.block-image-dragging {
+  border-color: var(--color-primary);
+  background-color: var(--color-selection-bg);
+}
+
+.block-image-icon {
+  color: var(--color-text-tertiary);
+}
+
+.block-image-input {
+  display: none;
+}
+
+.block-image-actions {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.block-image-action {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg-light);
+  backdrop-filter: var(--glass-backdrop-filter);
+  color: var(--color-text);
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-bg-secondary);
-  border: 1px dashed var(--color-border);
+  transition: background-color 0.2s ease;
+}
+
+.block-image-action:hover {
+  background: var(--glass-bg-dark);
+}
+
+.block-image-action-danger:hover {
+  background: var(--color-danger);
+  color: white;
 }
 
 .block-image-caption {

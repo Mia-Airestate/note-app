@@ -7,9 +7,11 @@ import { ListBlock } from './List/List';
 import { QuoteBlock } from './Quote/Quote';
 import { TableBlock } from './Table/Table';
 import { DividerBlock } from './Divider/Divider';
+import { PageBreak } from './PageBreak/PageBreak';
 
 export interface BlockComponentProps {
   block: import('@/types/block').Block;
+  onOpenSlashMenu?: (position: { top: number; left: number }) => void;
 }
 
 export const blockRegistry: Record<
@@ -69,6 +71,11 @@ export const blockRegistry: Record<
     component: Paragraph,
     label: 'Page',
     icon: '📄',
+  },
+  pageBreak: {
+    component: PageBreak,
+    label: 'Page Break',
+    icon: '—',
   },
 };
 

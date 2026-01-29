@@ -63,4 +63,14 @@
 
 .bottom-toolbar-editor {
   gap: var(--spacing-xs);
+  max-width: 300px;
+  min-width: unset;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.bottom-toolbar-editor::-webkit-scrollbar {
+  display: none;
 }

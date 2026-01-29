@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { Page } from '@/types/page';
 import { generateId } from '@/utils/id';
-import { Block } from '@/types/block';
+import { Block, FlowBlock, FloatingObject } from '@/types/block';
 import { savePage, getAllPages, deletePage as deletePageFromDB } from '@/utils/storage';
+import { migratePage } from '@/utils/migratePage';
 
 interface PageState {
   pages: Page[];
@@ -20,7 +21,7 @@ interface PageState {
 
 const createEmptyPage = (): Page => {
   const now = Date.now();
-  const emptyBlock: Block = {
+  const emptyFlowBlock: FlowBlock = {
     id: generateId(),
     type: 'paragraph',
     content: '',
@@ -29,7 +30,8 @@ const createEmptyPage = (): Page => {
   return {
     id: generateId(),
     title: 'Untitled',
-    blocks: [emptyBlock],
+    flowBlocks: [emptyFlowBlock],
+    floatingObjects: [],
     createdAt: now,
     updatedAt: now,
   };
@@ -88,9 +90,11 @@ export const usePageStore = create<PageState>((set, get) => ({
   loadPagesFromStorage: async () => {
     try {
       const pages = await getAllPages();
+      // Migrate old pages to new structure
+      const migratedPages = pages.map(migratePage);
       // Sort by updatedAt descending (newest first)
-      pages.sort((a, b) => b.updatedAt - a.updatedAt);
-      set({ pages });
+      migratedPages.sort((a, b) => b.updatedAt - a.updatedAt);
+      set({ pages: migratedPages });
     } catch (error) {
       console.error('Failed to load pages from storage:', error);
     }

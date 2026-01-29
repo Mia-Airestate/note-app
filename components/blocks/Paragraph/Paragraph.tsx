@@ -1,11 +1,17 @@
+'use client';
+
 import { BlockComponentProps } from '../registry';
+import { EditableBlock } from '../EditableBlock';
 import './Paragraph.css';
 
-export function Paragraph({ block }: BlockComponentProps) {
+export function Paragraph({ block, ...props }: BlockComponentProps & { onOpenSlashMenu?: (position: { top: number; left: number }) => void }) {
   return (
-    <div className="block-paragraph">
-      {block.content || <span className="text-tertiary">Paragraph</span>}
-    </div>
+    <EditableBlock
+      block={block}
+      className="block-paragraph"
+      placeholder="Paragraph"
+      {...props}
+    />
   );
 }
 

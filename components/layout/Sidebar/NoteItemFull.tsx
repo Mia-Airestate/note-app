@@ -15,8 +15,10 @@ interface NoteItemProps {
 }
 
 export function NoteItemFull({ page, isActive, onClick, onDelete, searchQuery }: NoteItemProps) {
-  const preview = getNotePreview(page.blocks);
+  const preview = getNotePreview(page.flowBlocks || page.blocks);
   const dateStr = formatNoteDate(page.updatedAt);
+
+  console.log('page', page);
 
   return (
     <div className="note-item-wrapper">

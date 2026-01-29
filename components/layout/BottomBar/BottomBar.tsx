@@ -17,6 +17,7 @@ const blockIcons: Record<BlockType, string> = {
   table: '⊞',
   divider: '—',
   page: '📄',
+  pageBreak: '—',
 };
 
 export function BottomBar() {

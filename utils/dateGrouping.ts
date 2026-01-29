@@ -81,8 +81,9 @@ export function formatNoteDate(timestamp: number): string {
   return `${month} ${day}, ${year}`;
 }
 
-export function getNotePreview(blocks: Page['blocks']): string {
-  for (const block of blocks) {
+export function getNotePreview(blocks: Page['blocks'] | Page['flowBlocks']): string {
+  if (!blocks || blocks.length === 0) return '';
+  for (const block of blocks as any[]) {
     if (block.content && block.content.trim()) {
       return block.content.trim().substring(0, 100);
     }
