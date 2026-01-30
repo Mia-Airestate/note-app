@@ -1,5 +1,6 @@
 import { Page } from '@/types/page';
 import { Block } from '@/types/block';
+import { serializeBlocksToMarkdown } from '@/utils/markdownSerializer';
 
 /**
  * Save the current note if one is open and has content
@@ -15,7 +16,8 @@ export function saveCurrentNote(
   if (currentView === 'editor' && selectedNoteId && blocks.length > 0) {
     const activePage = getActivePage();
     if (activePage) {
-      updatePage(selectedNoteId, { blocks });
+      const markdown = serializeBlocksToMarkdown(blocks);
+      updatePage(selectedNoteId, { markdown });
       return true;
     }
   }

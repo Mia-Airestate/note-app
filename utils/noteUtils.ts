@@ -1,112 +1,49 @@
 import { Page } from '@/types/page';
 import { Block } from '@/types/block';
 import { generateId } from '@/utils/id';
+import { parseMarkdownToBlocks } from '@/utils/markdownParser';
 
 /**
  * Extracts the title from a page.
- * Looks for the first heading block, otherwise uses the page title or "Untitled"
+ * Looks for the first heading block in markdown, otherwise uses the page title or "Untitled"
  */
 export function getNoteTitle(page: Page): string {
-  // Use flowBlocks (new structure) or blocks (legacy)
-  const blocks = page.flowBlocks || page.blocks || [];
-  if (!page || blocks.length === 0) {
-    return page?.title || 'Untitled';
+  if (!page) {
+    return 'Untitled';
   }
 
-  // Find first heading block
-  const headingBlock = blocks.find(
-    (block: any) => block.type === 'heading' && block.content?.trim()
-  );
+  // Parse markdown to find first heading
+  if (page.markdown) {
+    const blocks = parseMarkdownToBlocks(page.markdown);
+    const headingBlock = blocks.find(
+      (block) => block.type === 'heading' && block.content?.trim()
+    );
 
-  if (headingBlock && headingBlock.content.trim()) {
-    return headingBlock.content.trim();
+    if (headingBlock && headingBlock.content.trim()) {
+      return headingBlock.content.trim();
+    }
+
+    // Fallback to first non-empty block content
+    const firstContentBlock = blocks.find(
+      (block) => block.content && block.content.trim()
+    );
+
+    if (firstContentBlock && firstContentBlock.content.trim()) {
+      // Use first 50 chars as title
+      return firstContentBlock.content.trim().substring(0, 50);
+    }
   }
 
-  // Fallback to page title or first non-empty block content
-  if (page.title && page.title !== 'Untitled') {
-    return page.title;
-  }
-
-  const firstContentBlock = blocks.find(
-    (block: any) => block.content && block.content.trim()
-  );
-
-  if (firstContentBlock && firstContentBlock.content.trim()) {
-    // Use first 50 chars as title
-    return firstContentBlock.content.trim().substring(0, 50);
-  }
-
-  return 'Untitled';
+  // Fallback to page title
+  return page.title || 'Untitled';
 }
 
 /**
- * Converts a page to markdown format for easy migration to database
+ * Converts a page to markdown format
+ * Now just returns the markdown field directly
  */
 export function pageToMarkdown(page: Page): string {
-  const lines: string[] = [];
-  
-  // Add title as frontmatter or first heading
-  lines.push(`# ${page.title || 'Untitled'}\n`);
-
-  // Convert blocks to markdown (use flowBlocks or legacy blocks)
-  const blocks = page.flowBlocks || page.blocks || [];
-  blocks.forEach((block: any) => {
-    switch (block.type) {
-      case 'heading':
-        const level = block.props?.level || 1;
-        const prefix = '#'.repeat(level);
-        lines.push(`${prefix} ${block.content}`);
-        break;
-      
-      case 'paragraph':
-        if (block.content.trim()) {
-          lines.push(block.content);
-        }
-        break;
-      
-      case 'code':
-        const language = block.props?.language || '';
-        lines.push(`\`\`\`${language}`);
-        lines.push(block.content);
-        lines.push('```');
-        break;
-      
-      case 'list':
-        const listType = block.props?.listType || 'unordered';
-        if (block.children && block.children.length > 0) {
-          block.children.forEach((child: any, index: number) => {
-            const prefix = listType === 'ordered' ? `${index + 1}. ` : '- ';
-            lines.push(`${prefix}${child.content}`);
-          });
-        } else if (block.content) {
-          const prefix = listType === 'ordered' ? '1. ' : '- ';
-          lines.push(`${prefix}${block.content}`);
-        }
-        break;
-      
-      case 'quote':
-        lines.push(`> ${block.content}`);
-        break;
-      
-      case 'divider':
-        lines.push('---');
-        break;
-      
-      case 'image':
-        const alt = block.props?.alt || '';
-        const src = block.props?.src || '';
-        lines.push(`![${alt}](${src})`);
-        break;
-      
-      default:
-        if (block.content) {
-          lines.push(block.content);
-        }
-    }
-    lines.push(''); // Add blank line between blocks
-  });
-
-  return lines.join('\n').trim();
+  return page.markdown || '';
 }
 
 /**
@@ -219,20 +156,7 @@ export function markdownToPage(markdown: string, id?: string): Page {
   return {
     id: id || generateId(),
     title,
-    flowBlocks: blocks.length > 0 ? blocks.map((b: any) => ({
-      id: b.id,
-      type: b.type,
-      content: b.content,
-      formats: b.formats,
-      props: b.props,
-      children: b.children,
-      indent: b.indent,
-    })) : [{
-      id: generateId(),
-      type: 'paragraph',
-      content: '',
-    }],
-    floatingObjects: [],
+    markdown,
     createdAt: now,
     updatedAt: now,
   };

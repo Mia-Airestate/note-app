@@ -4,28 +4,20 @@ import { useEffect } from 'react';
 import { usePageStore } from '@/stores/pageStore';
 import { useEditorStore } from '@/stores/editorStore';
 import { BlockWrapper } from '@/components/blocks/BlockWrapper';
+import { parseMarkdownToBlocks } from '@/utils/markdownParser';
+import { migratePage } from '@/utils/migratePage';
 import './Editor.css';
 
 export function Editor() {
-  const activePage = usePageStore((state) => state.getActivePage());
+  const activePageRaw = usePageStore((state) => state.getActivePage());
+  const activePage = activePageRaw ? migratePage(activePageRaw) : null;
   const blocks = useEditorStore((state) => state.blocks);
   const setBlocks = useEditorStore((state) => state.setBlocks);
 
   useEffect(() => {
     if (activePage) {
-      // Use flowBlocks if available, otherwise fall back to blocks for backward compatibility
-      const blocksToSet = activePage.flowBlocks 
-        ? activePage.flowBlocks.map(flowBlock => ({
-            id: flowBlock.id,
-            type: flowBlock.type as any,
-            content: flowBlock.content,
-            formats: flowBlock.formats,
-            props: flowBlock.props as any,
-            children: flowBlock.children as any,
-            indent: flowBlock.indent,
-            layoutMode: 'flow' as const,
-          }))
-        : (activePage.blocks || []);
+      // Parse markdown to blocks
+      const blocksToSet = parseMarkdownToBlocks(activePage.markdown || '');
       setBlocks(blocksToSet);
     } else {
       setBlocks([]);
@@ -36,7 +28,7 @@ export function Editor() {
     return (
       <div className="editor editor-empty">
         <div className="editor-empty-content">
-          <h2 className="editor-empty-title">No note selected</h2>
+          <p className="editor-empty-title">No note selected</p>
           <p className="text-secondary">
             Select a note from the sidebar or create a new one
           </p>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { Block } from '@/types/block';
 import { useBlockEditor } from '@/hooks/useBlockEditor';
 import { useBlockNavigation } from '@/hooks/useBlockNavigation';
@@ -43,28 +43,86 @@ export function EditableBlock({
   const setSelection = useEditorStore((state) => state.setSelection);
   const lastBlockIdRef = useRef<string>(block.id);
 
+  // Initialize content when ref becomes available (runs synchronously after render)
+  // Only runs when block changes or on initial mount
+  useLayoutEffect(() => {
+    if (contentRef.current && (block.id !== lastBlockIdRef.current || !contentRef.current.textContent)) {
+      const currentText = contentRef.current.textContent || '';
+      const blockContent = block.content || '';
+      // Only set if empty or doesn't match (initial mount or block changed)
+      if (!currentText || currentText !== blockContent) {
+        if (block.formats && block.formats.length > 0) {
+          applyFormatsToDOM(contentRef.current, blockContent, block.formats);
+        } else {
+          contentRef.current.textContent = blockContent;
+        }
+        if (content !== blockContent) {
+          setContent(blockContent);
+        }
+      }
+    }
+  }, [block.id, block.content]);
+
   // Sync content when block changes externally and apply formatting
   useEffect(() => {
     if (block.id !== lastBlockIdRef.current) {
       lastBlockIdRef.current = block.id;
       setContent(block.content || '');
+      // Set content immediately if ref is available, otherwise use setTimeout
       if (contentRef.current) {
-        // Apply formatting if available
-        if (block.formats && block.formats.length > 0) {
-          applyFormatsToDOM(contentRef.current, block.content || '', block.formats);
-        } else {
-          contentRef.current.textContent = block.content || '';
+        const currentText = contentRef.current.textContent || '';
+        const blockContent = block.content || '';
+        if (currentText !== blockContent) {
+          if (block.formats && block.formats.length > 0) {
+            applyFormatsToDOM(contentRef.current, blockContent, block.formats);
+          } else {
+            contentRef.current.textContent = blockContent;
+          }
         }
+      } else {
+        // Use setTimeout to ensure DOM is ready
+        setTimeout(() => {
+          if (contentRef.current) {
+            const currentText = contentRef.current.textContent || '';
+            const blockContent = block.content || '';
+            if (currentText !== blockContent) {
+              if (block.formats && block.formats.length > 0) {
+                applyFormatsToDOM(contentRef.current, blockContent, block.formats);
+              } else {
+                contentRef.current.textContent = blockContent;
+              }
+            }
+          }
+        }, 0);
       }
     } else if (!isFocused && (block.content !== content || JSON.stringify(block.formats) !== JSON.stringify(block.formats))) {
       setContent(block.content || '');
+      // Set content immediately if ref is available
       if (contentRef.current) {
-        // Apply formatting if available
-        if (block.formats && block.formats.length > 0) {
-          applyFormatsToDOM(contentRef.current, block.content || '', block.formats);
-        } else {
-          contentRef.current.textContent = block.content || '';
+        const currentText = contentRef.current.textContent || '';
+        const blockContent = block.content || '';
+        if (currentText !== blockContent) {
+          if (block.formats && block.formats.length > 0) {
+            applyFormatsToDOM(contentRef.current, blockContent, block.formats);
+          } else {
+            contentRef.current.textContent = blockContent;
+          }
         }
+      } else {
+        // Use setTimeout to ensure DOM is ready
+        setTimeout(() => {
+          if (contentRef.current) {
+            const currentText = contentRef.current.textContent || '';
+            const blockContent = block.content || '';
+            if (currentText !== blockContent) {
+              if (block.formats && block.formats.length > 0) {
+                applyFormatsToDOM(contentRef.current, blockContent, block.formats);
+              } else {
+                contentRef.current.textContent = blockContent;
+              }
+            }
+          }
+        }, 0);
       }
     }
   }, [block.id, block.content, block.formats, isFocused, content]);

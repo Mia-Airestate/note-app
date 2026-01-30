@@ -1,0 +1,36 @@
+.markdown-code-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: rgb(31, 34, 35);
+  color: rgb(0, 242, 255)
+}
+
+.markdown-code-textarea {
+  width: 100%;
+  flex: 1;
+  padding: var(--spacing-md);
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  min-height: 100%;
+}
+
+.markdown-code-textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.markdown-code-textarea:focus {
+  outline: none;
+}
+

@@ -1,15 +1,12 @@
-import { Block, BlockType, HeadingLevel, ListType } from '@/types/block';
-import { Page } from '@/types/page';
+import { Block, HeadingLevel, ListType } from '@/types/block';
 
 /**
- * Convert a Page to markdown string
+ * Convert Block array to markdown string
  */
-export function exportPageToMarkdown(page: Page): string {
+export function serializeBlocksToMarkdown(blocks: Block[]): string {
   const lines: string[] = [];
 
-  // Use flowBlocks (new structure) or blocks (legacy)
-  const blocks = page.flowBlocks || page.blocks || [];
-  for (const block of blocks as Block[]) {
+  for (const block of blocks) {
     const markdown = serializeBlock(block);
     if (markdown) {
       lines.push(...markdown);
@@ -17,6 +14,13 @@ export function exportPageToMarkdown(page: Page): string {
   }
 
   return lines.join('\n');
+}
+
+/**
+ * Convert a Page to markdown string (for backward compatibility)
+ */
+export function exportPageToMarkdown(markdown: string): string {
+  return markdown;
 }
 
 /**
@@ -178,16 +182,14 @@ function applyInlineFormats(content: string, formats?: Block['formats']): string
 }
 
 /**
- * Download page as markdown file
+ * Download markdown as file
  */
-export function downloadPageAsMarkdown(page: Page): void {
-  const markdown = exportPageToMarkdown(page);
-  const filename = `${page.title || 'Untitled'}.md`;
+export function downloadMarkdownAsFile(markdown: string, filename: string = 'Untitled.md'): void {
   const blob = new Blob([markdown], { type: 'text/markdown' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = filename;
+  link.download = filename.endsWith('.md') ? filename : `${filename}.md`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

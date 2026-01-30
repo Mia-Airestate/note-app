@@ -1,7 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
-import { FlowBlock } from '@/types/block';
-import { usePageStore } from '@/stores/pageStore';
-import { useNavigationStore } from '@/stores/navigationStore';
+import { Block } from '@/types/block';
+import { useEditorStore } from '@/stores/editorStore';
 
 const PAGE_HEIGHT = 1056; // A4 height at 96dpi (11 inches)
 const PAGE_PADDING = 48; // Inner padding (var(--spacing-xl) = 24px * 2)
@@ -11,16 +10,14 @@ const PAGE_PADDING = 48; // Inner padding (var(--spacing-xl) = 24px * 2)
  * Measures block heights and splits overflowing content to next page
  */
 export function usePagination() {
-  const selectedNoteId = useNavigationStore((state) => state.selectedNoteId);
-  const getActivePage = usePageStore((state) => state.getActivePage);
-  const updatePage = usePageStore((state) => state.updatePage);
+  const blocks = useEditorStore((state) => state.blocks);
   const flowContainerRef = useRef<HTMLDivElement>(null);
   const blockRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   /**
    * Split a block at word boundaries to fit within page height
    */
-  const splitBlock = useCallback((block: FlowBlock, splitAt: number): { before: FlowBlock; after: FlowBlock } => {
+  const splitBlock = useCallback((block: Block, splitAt: number): { before: Block; after: Block } => {
     const content = block.content;
     const beforeContent = content.substring(0, splitAt).trim();
     const afterContent = content.substring(splitAt).trim();
@@ -33,14 +30,14 @@ export function usePagination() {
       end: f.end - splitAt,
     })) || [];
 
-    const before: FlowBlock = {
+    const before: Block = {
       ...block,
       id: `${block.id}-before`,
       content: beforeContent,
       formats: beforeFormats,
     };
 
-    const after: FlowBlock = {
+    const after: Block = {
       ...block,
       id: `${block.id}-after`,
       content: afterContent,
@@ -69,23 +66,21 @@ export function usePagination() {
   }, []);
 
   /**
-   * Measure and paginate flow blocks
+   * Measure and paginate blocks
    */
   const paginateBlocks = useCallback(() => {
-    const activePage = selectedNoteId ? getActivePage() : null;
-    if (!activePage || !flowContainerRef.current) return;
+    if (!flowContainerRef.current) return;
 
-    const flowBlocks = activePage.flowBlocks || [];
-    if (flowBlocks.length === 0) return;
+    if (blocks.length === 0) return;
 
-    const pages: FlowBlock[][] = [];
-    let currentPage: FlowBlock[] = [];
+    const pages: Block[][] = [];
+    let currentPage: Block[] = [];
     let currentPageHeight = 0;
     const availableHeight = PAGE_HEIGHT - PAGE_PADDING * 2;
 
-    for (const block of flowBlocks) {
+    for (const block of blocks) {
       // Check for manual page break
-      if (block.pageBreak) {
+      if (block.type === 'pageBreak') {
         if (currentPage.length > 0) {
           pages.push(currentPage);
           currentPage = [];
@@ -141,7 +136,7 @@ export function usePagination() {
 
     // For now, we just measure - actual splitting will be implemented in a later iteration
     // This hook provides the foundation for pagination logic
-  }, [selectedNoteId, getActivePage, findSplitPoint, splitBlock]);
+  }, [blocks, findSplitPoint, splitBlock]);
 
   /**
    * Register a block element for measurement

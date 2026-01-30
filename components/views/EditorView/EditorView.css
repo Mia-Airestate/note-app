@@ -2,6 +2,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -9,49 +10,73 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
 }
 
 .editor-view-empty-content {
   text-align: center;
-  padding: var(--spacing-xl);
 }
 
 .editor-view-empty-title {
-  font-size: var(--font-size-xl);
-  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
   margin-bottom: var(--spacing-md);
 }
 
-.editor-view-content {
-  position: relative;
+.editor-split-view {
+  display: flex;
   flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.editor-split-pane {
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
-  padding: var(--spacing-lg);
-  padding-bottom: calc(var(--bottom-bar-height) + var(--spacing-lg));
+  min-width: 0; /* Allows flex items to shrink below content size */
+  transition: width 0.2s ease;
 }
 
-/* Container for blocks and SlashMenu */
-.editor-view-blocks-container {
+.editor-note-pane {
+  border-right: 1px solid var(--glass-border-light);
+}
+
+.editor-markdown-pane {
+  border-left: 1px solid var(--glass-border-light);
+}
+
+.editor-split-resizer {
+  width: 4px;
+  background: var(--glass-border-light);
+  cursor: col-resize;
+  flex-shrink: 0;
   position: relative;
+  transition: background 0.2s ease;
 }
 
-.editor-view-placeholder {
-  padding: var(--spacing-xl);
-  text-align: center;
-  position: relative;
+.editor-split-resizer:hover {
+  background: var(--glass-border);
 }
 
-.editor-view-slash-hint {
+.editor-split-resizer::before {
+  content: '';
   position: absolute;
-  bottom: var(--spacing-md);
-  left: var(--spacing-lg);
-  font-size: var(--font-size-sm);
-  font-style: italic;
+  left: -2px;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  cursor: col-resize;
+}
+
+.editor-view-blocks-container {
+  flex: 1;
+  position: relative;
+  min-height: 100%;
 }
 
 .editor-view-blocks {
-  max-width: 800px;
-  margin: 0 auto;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
 }
-

@@ -81,13 +81,23 @@ export function formatNoteDate(timestamp: number): string {
   return `${month} ${day}, ${year}`;
 }
 
-export function getNotePreview(blocks: Page['blocks'] | Page['flowBlocks']): string {
-  if (!blocks || blocks.length === 0) return '';
-  for (const block of blocks as any[]) {
-    if (block.content && block.content.trim()) {
-      return block.content.trim().substring(0, 100);
-    }
-  }
-  return '';
+export function getNotePreview(markdown: string): string {
+  if (!markdown || markdown.trim() === '') return '';
+  
+  // Remove markdown syntax and get first 100 characters of plain text
+  const plainText = markdown
+    .replace(/^#+\s+/gm, '') // Remove headings
+    .replace(/```[\s\S]*?```/g, '') // Remove code blocks
+    .replace(/`[^`]+`/g, '') // Remove inline code
+    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1') // Convert links to text
+    .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold
+    .replace(/\*([^*]+)\*/g, '$1') // Remove italic
+    .replace(/~~([^~]+)~~/g, '$1') // Remove strikethrough
+    .replace(/^>\s+/gm, '') // Remove blockquotes
+    .replace(/^[-*]\s+/gm, '') // Remove list markers
+    .replace(/^\d+\.\s+/gm, '') // Remove numbered list markers
+    .trim();
+  
+  return plainText.substring(0, 100);
 }
 

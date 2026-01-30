@@ -19,17 +19,14 @@ export function TopBar() {
   const activePage =
     selectedNoteId && currentView === 'editor' ? getActivePage() : null;
 
-  // Get title from first line of editor (first block content)
+  // Get title from page
   useEffect(() => {
-    if (blocks.length > 0 && blocks[0].content) {
-      const firstLine = blocks[0].content.trim();
-      setTitle(firstLine || 'Untitled');
-    } else if (activePage) {
-      setTitle('Untitled');
+    if (activePage) {
+      setTitle(activePage.title || 'Untitled');
     } else {
       setTitle('');
     }
-  }, [blocks, activePage?.id]);
+  }, [activePage?.id, activePage?.title]);
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -45,26 +42,10 @@ export function TopBar() {
   const handleTitleBlur = () => {
     if (activePage && selectedNoteId) {
       const newTitle = title.trim() || 'Untitled';
-      // Update the first block content
-      if (blocks.length > 0) {
-        updatePage(selectedNoteId, {
-          title: newTitle,
-          blocks: blocks.map((block, index) =>
-            index === 0 ? { ...block, content: newTitle } : block
-          ),
-        });
-      } else {
-        // No blocks yet, create a paragraph block with the title
-        const paragraphBlock = {
-          id: `paragraph-${Date.now()}`,
-          type: 'paragraph' as const,
-          content: newTitle,
-        };
-        updatePage(selectedNoteId, {
-          title: newTitle,
-          blocks: [paragraphBlock],
-        });
-      }
+      // Just update the title - markdown will be synced automatically in EditorView
+      updatePage(selectedNoteId, {
+        title: newTitle,
+      });
     }
     setIsEditing(false);
   };
@@ -83,11 +64,7 @@ export function TopBar() {
     }
   };
 
-  const saveCurrentNote = () => {
-    if (activePage && selectedNoteId && blocks.length > 0) {
-      updatePage(selectedNoteId, { blocks });
-    }
-  };
+  // Saving is now handled automatically in EditorView
 
   if (currentView === 'list') {
     return null;

@@ -1,0 +1,13 @@
+.title-block {
+  position: relative;
+}
+
+.title-content {
+  font-size: var(--font-size-3xl);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: var(--spacing-lg) 0 var(--spacing-md);
+  min-height: 32px;
+  outline: none;
+}
+

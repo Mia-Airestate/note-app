@@ -115,6 +115,60 @@
   -webkit-line-clamp: 6;
 }
 
+/* Preview blocks container - same rendering as editor but non-editable */
+.note-item-blocks-preview {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  /* Match editor-view-blocks styling */
+  width: 100%;
+}
+
+/* Disable all interactions on blocks in preview mode */
+.note-item-blocks-preview .block-container {
+  pointer-events: none;
+  cursor: default;
+  margin-left: 0; /* Remove left margin in preview */
+}
+
+.note-item-blocks-preview .block-container:hover {
+  transform: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.note-item-blocks-preview .block-container:focus {
+  outline: none;
+}
+
+.note-item-blocks-preview .block-handle {
+  display: none;
+}
+
+.note-item-blocks-preview .editable-block-content {
+  pointer-events: none;
+  cursor: default;
+  user-select: none;
+}
+
+.note-item-blocks-preview .editable-block-content:focus {
+  outline: none;
+}
+
+/* Ensure blocks are properly sized in preview */
+.note-item-blocks-preview .block-container {
+  padding: var(--spacing-xs) 0;
+}
+
+/* Match editor block styling but scaled down for preview */
+.note-item-blocks-preview .block-container {
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
+
 .note-item-meta {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight);

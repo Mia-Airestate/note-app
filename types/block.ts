@@ -91,6 +91,7 @@ export interface Block {
     columns?: number;
     rows?: number;
     headers?: number[];
+    checked?: boolean;
   };
   children?: Block[];
   indent?: number;

@@ -4,7 +4,7 @@ import { ReactNode, useState, useEffect, useRef } from 'react';
 import { CollapsibleSidebar } from '@/components/layout/Sidebar/CollapsibleSidebar';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { GlassButton } from '@/components/ui/GlassButton/GlassButton';
-import { FiFileText, FiSettings, FiSidebar, FiChevronLeft, FiTrash2, FiMoreHorizontal, FiCheck } from 'react-icons/fi';
+import { FiFileText, FiSettings, FiSidebar, FiChevronLeft, FiTrash2, FiMoreHorizontal, FiCheck, FiCode, FiEye } from 'react-icons/fi';
 import { useNavigationStore } from '@/stores/navigationStore';
 import { usePageStore } from '@/stores/pageStore';
 import { useEditorStore } from '@/stores/editorStore';
@@ -25,7 +25,8 @@ export function AppWindow({ children, title = 'Life note', searchQuery = '' }: A
   const getActivePage = usePageStore((state) => state.getActivePage);
   const updatePage = usePageStore((state) => state.updatePage);
   const deletePage = usePageStore((state) => state.deletePage);
-  const blocks = useEditorStore((state) => state.blocks);
+  const viewMode = useEditorStore((state) => state.viewMode);
+  const setViewMode = useEditorStore((state) => state.setViewMode);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const activePage = selectedNoteId && currentView === 'editor' ? getActivePage() : null;
@@ -40,9 +41,8 @@ export function AppWindow({ children, title = 'Life note', searchQuery = '' }: A
   };
 
   const saveCurrentNote = () => {
-    if (activePage && selectedNoteId && blocks.length > 0) {
-      updatePage(selectedNoteId, { blocks });
-    }
+    // Saving is now handled automatically in EditorView
+    // This function is kept for backward compatibility but does nothing
   };
 
   const handleBack = () => {
@@ -164,6 +164,12 @@ export function AppWindow({ children, title = 'Life note', searchQuery = '' }: A
         <div className="app-window-actions">
           {isFileOpen && (
             <>
+              <GlassButton
+                icon={viewMode === 'markdown' ? FiEye : FiCode}
+                onClick={() => setViewMode(viewMode === 'note' ? 'markdown' : 'note')}
+                variant="unstyled"
+                ariaLabel={viewMode === 'markdown' ? 'View note' : 'View markdown'}
+              />
               <GlassButton
                 icon={FiTrash2}
                 onClick={handleDelete}

@@ -1,7 +1,7 @@
 'use client';
 
-import { usePageStore } from '@/stores/pageStore';
 import { useNavigationStore } from '@/stores/navigationStore';
+import { usePageData } from '@/hooks/usePageData';
 import { groupPagesByDate } from '@/utils/dateGrouping';
 import { highlightText } from '@/utils/highlightText';
 import './ListView.css';
@@ -12,17 +12,17 @@ interface ListViewProps {
 }
 
 export function ListView({ searchQuery }: ListViewProps) {
-  const pages = usePageStore((state) => state.pages);
+  // Use unified hook to get all pages data from IndexedDB
+  const { pages: allPages } = usePageData(null);
+  const pages = allPages || [];
   const setView = useNavigationStore((state) => state.setView);
 
   const filteredPages = searchQuery
     ? pages
         .filter((page) => {
           const titleMatch = page.title.toLowerCase().includes(searchQuery.toLowerCase());
-          // Search in flowBlocks (new structure) or blocks (legacy)
-          const contentMatch = (page.flowBlocks || page.blocks || []).some((block: any) =>
-            block.content?.toLowerCase().includes(searchQuery.toLowerCase())
-          );
+          // Search in markdown content
+          const contentMatch = (page.markdown || '').toLowerCase().includes(searchQuery.toLowerCase());
           return titleMatch || contentMatch;
         })
         .sort((a, b) => {

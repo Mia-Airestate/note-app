@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { usePageStore } from '@/stores/pageStore';
 import { useNavigationStore } from '@/stores/navigationStore';
 import { useEditorStore } from '@/stores/editorStore';
+import { usePageData } from '@/hooks/usePageData';
 import { groupPagesByDate } from '@/utils/dateGrouping';
 import { highlightText } from '@/utils/highlightText';
 import { GlassButton } from '@/components/ui/GlassButton/GlassButton';
@@ -18,7 +19,10 @@ interface CollapsibleSidebarProps {
 }
 
 export function CollapsibleSidebar({ isCollapsed, onToggle, searchQuery = '' }: CollapsibleSidebarProps) {
-  const pages = usePageStore((state) => state.pages);
+  // Use unified hook to get all pages data from IndexedDB
+  const { pages: allPages, isLoading } = usePageData(null);
+  const pages = allPages || [];
+  
   const activePageId = usePageStore((state) => state.activePageId);
   const updatePage = usePageStore((state) => state.updatePage);
   const deletePage = usePageStore((state) => state.deletePage);
@@ -30,6 +34,22 @@ export function CollapsibleSidebar({ isCollapsed, onToggle, searchQuery = '' }: 
   const blocks = useEditorStore((state) => state.blocks);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  // Log pages data
+  useEffect(() => {
+    console.log(`📂 [CollapsibleSidebar] Pages in sidebar:`, {
+      totalPages: pages.length,
+      activePageId,
+      selectedNoteId,
+      isLoading,
+      pages: pages.map(p => ({
+        id: p.id,
+        title: p.title,
+        markdownLength: (p.markdown || '').length,
+        markdownPreview: (p.markdown || '').substring(0, 50),
+      })),
+    });
+  }, [pages, activePageId, selectedNoteId, isLoading]);
 
   // Swipe gesture for mobile
   useEffect(() => {
@@ -73,10 +93,8 @@ export function CollapsibleSidebar({ isCollapsed, onToggle, searchQuery = '' }: 
 
   const handleNoteClick = (noteId: string) => {
     // Save current note before switching
-    const currentPage = getActivePage();
-    if (currentPage && currentPage.id !== noteId && blocks.length > 0) {
-      updatePage(currentPage.id, { blocks });
-    }
+    // Saving is now handled automatically in EditorView
+    // No need to manually save blocks here
     
     setView('editor', noteId);
     if (isMobile) {
@@ -106,10 +124,8 @@ export function CollapsibleSidebar({ isCollapsed, onToggle, searchQuery = '' }: 
     ? pages
         .filter((page) => {
           const titleMatch = page.title.toLowerCase().includes(searchQuery.toLowerCase());
-          // Search in flowBlocks (new structure) or blocks (legacy)
-          const contentMatch = (page.flowBlocks || page.blocks || []).some((block: any) =>
-            block.content?.toLowerCase().includes(searchQuery.toLowerCase())
-          );
+          // Search in markdown content
+          const contentMatch = (page.markdown || '').toLowerCase().includes(searchQuery.toLowerCase());
           return titleMatch || contentMatch;
         })
         .sort((a, b) => {

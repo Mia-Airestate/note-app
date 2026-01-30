@@ -8,10 +8,12 @@ interface EditorState {
   selection: Selection | null;
   focusedBlockId: string | null;
   caretPosition: number | null;
+  viewMode: 'note' | 'markdown';
   setBlocks: (blocks: Block[]) => void;
   setSelection: (selection: Selection | null) => void;
   setFocusedBlock: (id: string | null) => void;
   setCaretPosition: (position: number | null) => void;
+  setViewMode: (mode: 'note' | 'markdown') => void;
   insertBlock: (
     type: BlockType,
     position: number,
@@ -40,6 +42,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   selection: null,
   focusedBlockId: null,
   caretPosition: null,
+  viewMode: 'note',
 
   setBlocks: (blocks) => set({ blocks }),
 
@@ -48,6 +51,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setFocusedBlock: (id) => set({ focusedBlockId: id }),
 
   setCaretPosition: (position) => set({ caretPosition: position }),
+
+  setViewMode: (mode) => set({ viewMode: mode }),
 
   insertBlock: (type, position, props) => {
     const newBlock = createBlock(type, '', props);

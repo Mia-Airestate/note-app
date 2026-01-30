@@ -1,0 +1,27 @@
+.todo-block {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-sm) 0;
+}
+
+.todo-checkbox {
+  margin-top: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todo-content {
+  flex: 1;
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  min-height: 24px;
+  outline: none;
+}
+
+.todo-block.checked .todo-content {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+

@@ -235,6 +235,40 @@ export function useBlockEditor() {
     [blocks]
   );
 
+  /**
+   * Indent a block (increase indent level)
+   */
+  const indentBlock = useCallback(
+    (id: string): boolean => {
+      const block = blocks.find((b) => b.id === id);
+      if (!block) return false;
+
+      const currentIndent = block.indent || 0;
+      if (currentIndent >= 3) return false;
+
+      updateBlock(id, { indent: currentIndent + 1 });
+      return true;
+    },
+    [blocks, updateBlock]
+  );
+
+  /**
+   * Outdent a block (decrease indent level)
+   */
+  const outdentBlock = useCallback(
+    (id: string): boolean => {
+      const block = blocks.find((b) => b.id === id);
+      if (!block) return false;
+
+      const currentIndent = block.indent || 0;
+      if (currentIndent <= 0) return false;
+
+      updateBlock(id, { indent: currentIndent - 1 });
+      return true;
+    },
+    [blocks, updateBlock]
+  );
+
   return {
     blocks,
     addBlock,
@@ -247,6 +281,8 @@ export function useBlockEditor() {
     getBlock,
     getBlockIndex,
     createBlock,
+    indentBlock,
+    outdentBlock,
   };
 }
 
