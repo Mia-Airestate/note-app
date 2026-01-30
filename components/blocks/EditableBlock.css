@@ -17,12 +17,6 @@
   word-wrap: break-word;
 }
 
-.editable-block-content:empty:before {
-  content: attr(data-placeholder);
-  color: var(--color-text-tertiary);
-  pointer-events: none;
-}
-
 .editable-block-content:focus {
   outline: none;
 }

@@ -40,6 +40,7 @@
 
 .editor-note-pane {
   border-right: 1px solid var(--glass-border-light);
+  padding: var(--spacing-md);
 }
 
 .editor-markdown-pane {
@@ -73,10 +74,10 @@
   flex: 1;
   position: relative;
   min-height: 100%;
+  padding: 0;
 }
 
-.editor-view-blocks {
+/* .editor-view-blocks {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
-}
+} */

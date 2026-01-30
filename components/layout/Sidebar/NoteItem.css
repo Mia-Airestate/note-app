@@ -1,7 +1,9 @@
 .note-item-wrapper {
   position: relative;
   width: 100%;
+  max-width: 100%;
   overflow: visible;
+  box-sizing: border-box;
 }
 
 .note-item-delete-action {
@@ -27,6 +29,7 @@
 
 .note-item {
   width: 100%;
+  max-width: 100%;
   border: none;
   background: transparent;
   backdrop-filter: var(--glass-backdrop-filter);
@@ -43,6 +46,9 @@
   position: relative;
   z-index: 1;
   touch-action: pan-y;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .note-item.full {
@@ -88,6 +94,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--color-text);
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .note-item-divider {

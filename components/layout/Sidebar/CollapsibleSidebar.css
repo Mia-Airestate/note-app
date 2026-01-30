@@ -1,5 +1,8 @@
 .collapsible-sidebar {
   width: var(--sidebar-width);
+  /* no scroll horizontal */
+  overflow-x: hidden;
+  
   height: 100%;
   border-right: 1px solid var(--color-border);
   display: flex;
@@ -16,10 +19,15 @@
 .sidebar-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+  max-width: 100%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .sidebar-empty {
@@ -31,12 +39,18 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .sidebar-group {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .sidebar-group-header {
@@ -53,6 +67,12 @@
   letter-spacing: 0.5px;
   padding: var(--spacing-xs) 0;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .sidebar-list {
@@ -61,6 +81,9 @@
   gap: var(--spacing-xs);
   position: relative;
   overflow: visible;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {

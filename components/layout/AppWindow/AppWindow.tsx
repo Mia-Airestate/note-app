@@ -4,7 +4,7 @@ import { ReactNode, useState, useEffect, useRef } from 'react';
 import { CollapsibleSidebar } from '@/components/layout/Sidebar/CollapsibleSidebar';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { GlassButton } from '@/components/ui/GlassButton/GlassButton';
-import { FiFileText, FiSettings, FiSidebar, FiChevronLeft, FiTrash2, FiMoreHorizontal, FiCheck, FiCode, FiEye } from 'react-icons/fi';
+import { FiFileText, FiSettings, FiSidebar, FiTrash2, FiMoreHorizontal, FiCheck, FiCode, FiEye } from 'react-icons/fi';
 import { useNavigationStore } from '@/stores/navigationStore';
 import { usePageStore } from '@/stores/pageStore';
 import { useEditorStore } from '@/stores/editorStore';
@@ -43,11 +43,6 @@ export function AppWindow({ children, title = 'Life note', searchQuery = '' }: A
   const saveCurrentNote = () => {
     // Saving is now handled automatically in EditorView
     // This function is kept for backward compatibility but does nothing
-  };
-
-  const handleBack = () => {
-    saveCurrentNote();
-    goBack();
   };
 
   const handleDelete = () => {
@@ -139,27 +134,13 @@ export function AppWindow({ children, title = 'Life note', searchQuery = '' }: A
             <button className="window-control window-control-maximize" />
           </div>
           {!isMobile && (
-            <>
-              <GlassButton 
-                icon={FiSidebar} 
-                variant="unstyled"
-                ariaLabel="Toggle sidebar" 
-                onClick={handleToggleSidebar}
-              />
-              {isFileOpen && (
-                <GlassButton 
-                  icon={FiChevronLeft}
-                  variant="unstyled"
-                  ariaLabel="Back" 
-                  onClick={handleBack}
-                />
-              )}
-            </>
+            <GlassButton 
+              icon={FiSidebar} 
+              variant="unstyled"
+              ariaLabel="Toggle sidebar" 
+              onClick={handleToggleSidebar}
+            />
           )}
-        </div>
-        <div className="app-window-title">
-          <Icon icon={FiFileText} size={14} className="app-window-icon" />
-          <span>{getPageTitle()}</span>
         </div>
         <div className="app-window-actions">
           {isFileOpen && (

@@ -45,13 +45,33 @@ export function EditorView() {
   const { page: activePage, isLoading: isPageLoading } = usePageData(selectedNoteId);
 
   const handleSlashMenuSelect = (type: BlockType) => {
+    let newBlockId: string;
     if (focusedBlockId) {
-      addBlock(type, focusedBlockId);
+      newBlockId = addBlock(type, focusedBlockId);
     } else {
       const lastBlockId = blocks.length > 0 ? blocks[blocks.length - 1].id : undefined;
-      addBlock(type, lastBlockId);
+      newBlockId = addBlock(type, lastBlockId);
     }
     closeMenu();
+    
+    // Focus the new block after a short delay to ensure it's rendered
+    setTimeout(() => {
+      const newBlockElement = document.querySelector(
+        `[data-block-id="${newBlockId}"] .editable-block-content`
+      ) as HTMLElement;
+      if (newBlockElement) {
+        newBlockElement.focus();
+        // Set caret at start
+        const selection = window.getSelection();
+        if (selection) {
+          const range = document.createRange();
+          range.selectNodeContents(newBlockElement);
+          range.collapse(true); // Start
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      }
+    }, 10);
   };
 
   // Load markdown and parse to blocks when page changes

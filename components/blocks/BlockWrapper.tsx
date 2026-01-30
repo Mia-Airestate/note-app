@@ -94,9 +94,6 @@ export function BlockWrapper({ block, onOpenSlashMenu }: BlockWrapperProps) {
     ...(onOpenSlashMenu && { onOpenSlashMenu }),
   };
 
-  // Determine if this is a text block (has editable content)
-  const isTextBlock = block.type === 'paragraph' || block.type === 'heading' || block.type === 'list' || block.type === 'quote';
-  
   return (
     <div
       className={cn(
@@ -105,41 +102,17 @@ export function BlockWrapper({ block, onOpenSlashMenu }: BlockWrapperProps) {
         isSelected && 'block-selected',
         isDragging && 'block-dragging',
         isDragOver === 'top' && 'block-drag-over-top',
-        isDragOver === 'bottom' && 'block-drag-over-bottom',
-        !isTextBlock && 'block-non-text' // Add class for non-text blocks
+        isDragOver === 'bottom' && 'block-drag-over-bottom'
       )}
+      draggable
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       onClick={() => setFocusedBlock(block.id)}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      onMouseDown={(e) => {
-        // For non-text blocks, enable dragging on mousedown
-        if (!isTextBlock) {
-          const handle = (e.currentTarget as HTMLElement).querySelector('.block-handle');
-          if (handle && !handle.contains(e.target as Node)) {
-            // User clicked on block but not on handle - start drag
-            const dragEvent = new DragEvent('dragstart', {
-              bubbles: true,
-              cancelable: true,
-            });
-            Object.defineProperty(dragEvent, 'dataTransfer', {
-              value: {
-                setData: () => {},
-                effectAllowed: 'move',
-              },
-            });
-            handleDragStart(dragEvent as any);
-          }
-        }
-      }}
       data-block-id={block.id}
     >
-      <div
-        className="block-handle"
-        draggable
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      />
       <BlockComponent {...blockProps} />
     </div>
   );

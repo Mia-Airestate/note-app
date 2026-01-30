@@ -4,11 +4,14 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigationStore } from '@/stores/navigationStore';
 import { usePageStore } from '@/stores/pageStore';
 import { useEditorStore } from '@/stores/editorStore';
+import { GlassButton } from '@/components/ui/GlassButton/GlassButton';
+import { FiChevronLeft } from 'react-icons/fi';
 import './TopBar.css';
 
 export function TopBar() {
   const currentView = useNavigationStore((state) => state.currentView);
   const selectedNoteId = useNavigationStore((state) => state.selectedNoteId);
+  const goBack = useNavigationStore((state) => state.goBack);
   const getActivePage = usePageStore((state) => state.getActivePage);
   const updatePage = usePageStore((state) => state.updatePage);
   const blocks = useEditorStore((state) => state.blocks);
@@ -18,6 +21,11 @@ export function TopBar() {
 
   const activePage =
     selectedNoteId && currentView === 'editor' ? getActivePage() : null;
+
+  const handleBack = () => {
+    // Saving is now handled automatically in EditorView
+    goBack();
+  };
 
   // Get title from page
   useEffect(() => {
@@ -74,21 +82,29 @@ export function TopBar() {
     <div className="top-bar">
       <div className="top-bar-left">
         {activePage && (
-          <div className="top-bar-title">
-            {isEditing ? (
-              <input
-                ref={inputRef}
-                type="text"
-                className="top-bar-title-input"
-                value={title}
-                onChange={handleTitleChange}
-                onBlur={handleTitleBlur}
-                onKeyDown={handleTitleKeyDown}
-              />
-            ) : (
-              <span onClick={() => setIsEditing(true)}>{title}</span>
-            )}
-          </div>
+          <>
+            <GlassButton 
+              icon={FiChevronLeft}
+              variant="unstyled"
+              ariaLabel="Back" 
+              onClick={handleBack}
+            />
+            <div className="top-bar-title">
+              {isEditing ? (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  className="top-bar-title-input"
+                  value={title}
+                  onChange={handleTitleChange}
+                  onBlur={handleTitleBlur}
+                  onKeyDown={handleTitleKeyDown}
+                />
+              ) : (
+                <span onClick={() => setIsEditing(true)}>{title}</span>
+              )}
+            </div>
+          </>
         )}
       </div>
     </div>
