@@ -173,10 +173,13 @@ export function BottomToolbar({ onSearchChange }: BottomToolbarProps) {
   }
 
   // Determine which items to show based on selection state
-  const showBlockItems = selection?.type !== 'text';
-  const showFormatItems = selection?.type === 'text';
+  // Show format items when text is selected, block items otherwise
+  const hasTextSelection = selection?.type === 'text';
+  const showFormatItems = hasTextSelection;
+  const showBlockItems = !hasTextSelection;
 
-  const blockItems = showBlockItems ? getBottomBarBlockItems() : [];
+  // Get items based on current selection state
+  const blockItems = showBlockItems ? getBottomBarBlockItems(selection) : [];
   const formatItems = showFormatItems ? getBottomBarFormatItems(selection) : [];
 
   return (
@@ -200,16 +203,16 @@ export function BottomToolbar({ onSearchChange }: BottomToolbarProps) {
           <GlassButton
             key={item.id}
             icon={item.icon}
-            variant={item.id === 'bold' ? 'active' : 'unstyled'}
+            variant="unstyled"
             ariaLabel={item.label}
             onClick={() => handleFormatSelect(item.id)}
           />
         ))}
-      <GlassButton
+      {/* <GlassButton
         icon={FiMoreHorizontal}
         variant="unstyled"
         ariaLabel="More options"
-      />
+      /> */}
     </div>
   );
 }

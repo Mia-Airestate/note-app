@@ -18,16 +18,21 @@
 @media (max-width: 768px) {
   .app-window {
     min-width: 100dvw;
-    min-height: 100dvh;
+    /* Use small viewport height (svh) which accounts for mobile browser UI */
+    /* This ensures the container doesn't extend beyond visible viewport */
+    height: 100svh;
+    min-height: 100svh;
     max-width: none;
     max-height: none;
     border-radius: 0;
-    box-shadow: none; 
+    box-shadow: none;
+    /* Allow overflow so fixed positioned children can escape */
+    overflow: visible;
   }
 }
 
 .app-window-header {
-  height: 40px;
+  min-height: 40px;
   backdrop-filter: var(--glass-backdrop-filter);
   -webkit-backdrop-filter: var(--glass-backdrop-filter);
   border-bottom: 1px solid var(--color-border);
@@ -101,7 +106,7 @@
 }
 
 .app-window-icon {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .app-window-actions {
@@ -118,6 +123,16 @@
   flex-direction: row;
 }
 
+@media (max-width: 768px) {
+  .app-window-content {
+    /* On mobile, allow overflow so fixed toolbar can escape */
+    overflow: visible;
+    /* Ensure it doesn't create a new containing block */
+    transform: none;
+    filter: none;
+  }
+}
+
 .app-window-main {
   flex: 1;
   display: flex;
@@ -126,6 +141,7 @@
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
+  position: relative; /* Allows absolute positioning of child elements like BottomToolbar */
 }
 
 [data-theme='dark'] .app-window-main {
@@ -139,6 +155,11 @@
 
   .app-window-main {
     width: 100%;
+    /* On mobile, remove backdrop-filter to avoid creating containing block */
+    /* This allows fixed positioned children to escape */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    overflow: visible;
   }
 
   /* Hide sidebar toggle button on mobile */

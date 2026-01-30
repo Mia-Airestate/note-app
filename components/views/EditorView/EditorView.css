@@ -40,7 +40,7 @@
 
 .editor-note-pane {
   border-right: 1px solid var(--glass-border-light);
-  padding: var(--spacing-md);
+  padding: 20px
 }
 
 .editor-markdown-pane {

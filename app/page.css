@@ -30,6 +30,17 @@
   -webkit-backdrop-filter: var(--glass-backdrop-filter);
 }
 
+@media (max-width: 768px) {
+  .desktop-container {
+    /* On mobile, use small viewport height and remove padding */
+    height: 100svh;
+    padding: 0;
+    /* Remove backdrop-filter to avoid creating containing block for fixed elements */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
 [data-theme='dark'] .desktop-container {
   background: var(--glass-bg-dark);
 }

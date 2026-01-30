@@ -14,6 +14,8 @@
   z-index: 100;
   border: 1px solid var(--glass-border-light);
   min-width: 300px;
+  /* Absolute positioning on desktop (relative to app-window) */
+  /* Fixed positioning on mobile ensures toolbar stays visible when keyboard appears */
 }
 
 .bottom-toolbar-editor {
@@ -73,4 +75,15 @@
 
 .bottom-toolbar-editor::-webkit-scrollbar {
   display: none;
+}
+
+/* Mobile-specific adjustments for keyboard visibility */
+@media (max-width: 768px) {
+  .bottom-toolbar {
+    /* Switch to fixed positioning on mobile to handle keyboard */
+    position: fixed !important;
+    /* Account for mobile browser UI and safe area */
+    bottom: calc(env(safe-area-inset-bottom, 0px) + var(--spacing-md)) !important;
+    z-index: 1000 !important;
+  }
 }

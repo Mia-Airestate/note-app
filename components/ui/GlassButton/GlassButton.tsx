@@ -23,9 +23,9 @@ export function GlassButton({
     }
     if (typeof icon === 'function') {
       const IconComponent = icon as React.ComponentType<{ size?: number; className?: string }>;
-      return <IconComponent size={16} className="glass-button-icon" />;
+      return <IconComponent size={18} className="glass-button-icon" />;
     }
-    return <Icon icon={icon as IconType} size={16} />;
+    return <Icon icon={icon as IconType} size={18} />;
   };
 
   return (

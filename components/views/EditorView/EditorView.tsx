@@ -142,12 +142,12 @@ export function EditorView() {
     }
   }, [activePage?.id, activePage?.markdown, setBlocks, createBlock, updatePage, selectedNoteId]);
 
-  // Auto-focus first block when blocks are loaded
+  // Auto-focus first block when blocks are loaded (especially for new pages)
   useEffect(() => {
     if (activePage && blocks.length > 0 && !hasAutoFocusedRef.current && !isSyncingRef.current) {
       // Find first editable block (paragraph, heading, list, quote)
       const editableTypes = ['paragraph', 'heading', 'list', 'quote'];
-      const firstEditableBlock = blocks.find(block => editableTypes.includes(block.type));
+      const firstEditableBlock = blocks.find(block => editableTypes.includes(block.type)) || blocks[0];
       
       if (firstEditableBlock) {
         // Set focused block ID
@@ -155,8 +155,11 @@ export function EditorView() {
         hasAutoFocusedRef.current = true;
         
         // Focus the contentEditable element after a brief delay to ensure it's rendered
-        const focusTimeout = setTimeout(() => {
-          const blockElement = document.querySelector(`[data-block-id="${firstEditableBlock.id}"] .editable-block-content`) as HTMLElement;
+        const focusBlock = () => {
+          const blockElement = document.querySelector(
+            `[data-block-id="${firstEditableBlock.id}"] .editable-block-content`
+          ) as HTMLElement;
+          
           if (blockElement) {
             blockElement.focus();
             // Set cursor to start of block
@@ -168,26 +171,22 @@ export function EditorView() {
               selection.removeAllRanges();
               selection.addRange(range);
             }
-          } else {
-            // If element not found, try again after a longer delay
-            setTimeout(() => {
-              const retryElement = document.querySelector(`[data-block-id="${firstEditableBlock.id}"] .editable-block-content`) as HTMLElement;
-              if (retryElement) {
-                retryElement.focus();
-                const selection = window.getSelection();
-                if (selection) {
-                  const range = document.createRange();
-                  range.selectNodeContents(retryElement);
-                  range.collapse(true);
-                  selection.removeAllRanges();
-                  selection.addRange(range);
-                }
-              }
-            }, 300);
+            return true;
           }
-        }, 200);
+          return false;
+        };
         
-        return () => clearTimeout(focusTimeout);
+        // Try immediately, then with delays if needed
+        if (!focusBlock()) {
+          const focusTimeout = setTimeout(() => {
+            if (!focusBlock()) {
+              // Final retry after longer delay
+              setTimeout(focusBlock, 300);
+            }
+          }, 100);
+          
+          return () => clearTimeout(focusTimeout);
+        }
       }
     }
   }, [blocks.length, activePage?.id, setFocusedBlock]);
@@ -278,6 +277,39 @@ export function EditorView() {
     }
   };
 
+  // Handle clicks on empty space to focus last block
+  const handleEditorClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Don't interfere if clicking directly on a block or its content
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-block-id]')) {
+      return;
+    }
+
+    if (blocks.length === 0) return;
+
+    // Focus the last block
+    const lastBlock = blocks[blocks.length - 1];
+    const lastBlockElement = document.querySelector(
+      `[data-block-id="${lastBlock.id}"] .editable-block-content`
+    ) as HTMLElement;
+
+    if (!lastBlockElement) return;
+
+    // Set focused block in store
+    setFocusedBlock(lastBlock.id);
+
+    // Focus the editable content and position caret at end
+    lastBlockElement.focus();
+    const selection = window.getSelection();
+    if (selection) {
+      const range = document.createRange();
+      range.selectNodeContents(lastBlockElement);
+      range.collapse(false); // End
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  };
+
   // Handle split view resizing
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -339,7 +371,7 @@ export function EditorView() {
             style={{ width: viewMode === 'markdown' ? `${splitWidth}%` : '100%' }}
           >
             <div className="editor-view-blocks-container">
-              <div className="editor-view-blocks">
+              <div className="editor-view-blocks" onClick={handleEditorClick}>
                 {blocks.length === 0 ? (
                   // Fallback: render a temporary block if blocks array is empty
                   // This should rarely happen as the useEffect above ensures at least one block
